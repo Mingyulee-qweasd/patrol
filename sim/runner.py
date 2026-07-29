@@ -66,6 +66,7 @@ class Episode:
         self.rdv.schedule(0.0, 0.0, +1, d0_s)
         self.d0_s = d0_s
         self.coalition = {}   # cid -> {"xy", "crew": set 배정, "arrived": set}
+        self.snaps = []       # 동작 확인 동영상용 장면 기록
         self.tasks_by_id = {x.tid: x for x in self.stream.tasks}
 
     # ── 감지·판단 사이클 ─────────────────────────────────────────
@@ -221,6 +222,15 @@ class Episode:
                     else:
                         advance_flanker(r, self.env, self.wpath[rid], self.wcum[rid])
                 self.sense(rid, now)
+            if int(now) % 20 == 0:  # 장면 기록 (20초마다)
+                self.snaps.append({
+                    "t": now,
+                    "robots": {rid: (float(r.xy[0]), float(r.xy[1]), r.mode)
+                               for rid, r in self.robots.items()},
+                    "tasks": [(float(x.xy[0]), float(x.xy[1]), x.kind, x.gt_class)
+                              for x in self.stream.spawned(now)],
+                    "meet": (self.rdv.next.t, tuple(map(float, meet_xy))),
+                })
             # 전원 집결 → 의사일정
             if due and all(np.linalg.norm(r.xy - meet_xy) < MEET_R or r.mode == "at_rdv"
                            for r in self.robots.values()):
