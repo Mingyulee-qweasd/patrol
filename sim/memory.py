@@ -28,6 +28,7 @@ class Candidate:
     agenda: bool = False           # 안건 큐 등재
     reobserve: bool = False        # 재관측 예약
     convoked: bool = False         # 조기 소집 1회 발화 플래그
+    reobs_visits: int = 0          # 재관측 전용 방문 횟수 (상한 2)
     gt_tid: int = -1               # 채점용 (정책은 안 봄)
 
     @property
@@ -52,7 +53,7 @@ class RobotMemory:
 
         for c in self.items:
             if np.linalg.norm(c.xy - xy) < MATCH_RADIUS:
-                c.s_logodds += delta
+                c.s_logodds = float(np.clip(c.s_logodds + delta, -30, 30))
                 c.last_seen = now
                 if band == "near":
                     c.near_confirmed = True
