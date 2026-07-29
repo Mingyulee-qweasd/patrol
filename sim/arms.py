@@ -14,7 +14,7 @@ class Arm:
     adaptive_rdv: bool = True     # False: 고정 주기 랑데뷰 (TTC) — 간격 조정·조기 소집 없음
     use_agenda: bool = True       # False: 안건화·경매 자체가 없음 (solo-only)
     broadcast: bool = False       # True: 통신 무제약 — 매초 전 로봇 기억 공유+즉시 배정 (상한선)
-    sebs_patrol: bool = False     # True: 고정 톱니 대신 방치 시간 탐욕 순찰 (외부 기준 SEBS 계열)
+    sebs_patrol: bool = False     # True: 고정 톱니 대신 방치 시간 탐욕 순찰 (CR 계열 반응형 (Portugal&Rocha 2013의 비교군 고전 — SEBS 본체는 상시 통신 전제라 직접 재현 불가, 논문에 명시))
 
 
 ARMS = {
@@ -24,7 +24,7 @@ ARMS = {
     "fixed-rdv":  Arm("fixed-rdv", adaptive_rdv=False),
     "solo-only":  Arm("solo-only", use_agenda=False),
     "broadcast":  Arm("broadcast", broadcast=True),
-    "sebs-reactive": Arm("sebs-reactive", sebs_patrol=True, use_sizing=False,
+    "greedy-reactive": Arm("greedy-reactive", sebs_patrol=True, use_sizing=False,
                          use_agenda=False, adaptive_rdv=False),
     # role-adaptive는 P0 주입 후 별도 구현 (역할 재배정 로직)
 }

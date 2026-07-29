@@ -108,7 +108,7 @@
   ②재관측 예약 지점 들르기 (60m 이내·2회 상한·300s 쿨다운)
 - ~~metrics.py~~ ✅ / ~~λ 재보정~~ ✅ (0.25×) / arms 1~7 ✅ (role-adaptive만 잔여)
 - metrics.py: idleness 식1~5(정상상태 집계)·GT-u 가중 지연·오개입 TPR/FPR·인원부족 복귀률·소집 발화율·백로그
-- arms.py: full / no-sizing / fixed-rdv(TTC·ETC) / no-gate / solo-only / broadcast / sebs-reactive / role-adaptive
+- arms.py: full / no-sizing / fixed-rdv(TTC·ETC) / no-gate / solo-only / broadcast / greedy-reactive / role-adaptive
 - λ 재보정 (metrics 실측 기반), tests/ (기하·경매·추첨 분포·해석 검증 ±5%), exp/run_all.py + stats.py
 - measure.py (P0 채점) — 본 측정 완료 직후
 
