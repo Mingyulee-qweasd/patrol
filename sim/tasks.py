@@ -57,6 +57,7 @@ class TaskStream:
         mean_half_w = np.mean([w for w in env.corridor_width.values()]) / 2
         mean_travel = 2 * mean_half_w / env.v_sweep + 30.0  # 노선방향 접근 여유
         lam = derive_lambda(env, mean_travel, rho)
+        lam *= env.task_cfg.get("lambda_calib", 1.0)  # 경험 보정 (발견 병목 반영)
 
         self.tasks: list[Task] = []
         tid = 0

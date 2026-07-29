@@ -17,7 +17,8 @@ rendezvous:
   meet_eps_s: 30       # 만남 소요 ε
   grace_frac: 0.1      # 유예 = 0.1 × 간격
 tasks:
-  rho_target: 0.5      # 부하율 → λ 유도 (tasks.py)
+  rho_target: 0.5      # 명목 목표 (공식 유도의 입력)
+  lambda_calib: 0.25   # 경험 보정 계수 (07-29 스윕: 공식이 발견 병목을 몰라 4배 과대) — 실효 λ ≈ 14건/h
   # 온톨로지 ④안: 타입, 필요 n, 긴급도 u, 발생 비중 (물리 임무), 비개입은 별도
   # sharps·carcass_s = "급한 1인 임무" (n-u 상관 해소), hazard = 전선·화학류만 (개입 금지)
   types:

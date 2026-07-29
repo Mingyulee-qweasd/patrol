@@ -260,3 +260,5 @@
 {"ts": 1785322575.4362898, "backend": "ollama", "tag": "p0main:far:frozen", "status": 200, "cache_key": "3afa7ff8701aca1558339f3af4c4b418fb2618a46605dbdb8c5d11837ba3066f", "image": "/home/aprl/patrol/p0/images/far_synth/sharps/sharps_ov024.jpg", "latency_s": 13.41, "usage": {"prompt": 1656, "out": 714}}
 {"ts": 1785322605.7791991, "backend": "ollama", "tag": "p0main:far:para1", "status": 200, "note": "빈 응답 재시도 1회로 회복"}
 {"ts": 1785322605.779395, "backend": "ollama", "tag": "p0main:far:para1", "status": 200, "cache_key": "62df9cf87e262c976abab9709f764f32a684cdb8759b020f8dcc19a8c6093153", "image": "/home/aprl/patrol/p0/images/far_synth/sharps/sharps_ov024.jpg", "latency_s": 30.34, "usage": {"prompt": 1653, "out": 1896}}
+{"ts": 1785322641.286558, "backend": "ollama", "tag": "p0main:far:para2", "status": 200, "note": "빈 응답 재시도 1회로 회복"}
+{"ts": 1785322641.2867923, "backend": "ollama", "tag": "p0main:far:para2", "status": 200, "cache_key": "2eb0cc227175279c4f4c30a10a57c75696e550289b8fb3f2548f95f1f8f5d875", "image": "/home/aprl/patrol/p0/images/far_synth/sharps/sharps_ov024.jpg", "latency_s": 35.51, "usage": {"prompt": 1655, "out": 2254}}
