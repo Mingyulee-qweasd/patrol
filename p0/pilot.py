@@ -8,13 +8,32 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-import client
+import os
+if os.environ.get("PATROL_BACKEND", "gemini") == "ollama":
+    import client_ollama as client
+else:
+    import client
+
+
+RESPONSE_SCHEMA = {  # 구조 강제 — 본 측정에서 파싱 실패 원천 차단 (동결 설정의 일부)
+    "type": "OBJECT",
+    "properties": {
+        "is_task": {"type": "BOOLEAN"},
+        "type": {"type": "STRING"},
+        "n_robots": {"type": "STRING", "enum": ["0", "1", "2", "3", "beyond"]},
+        "urgency": {"type": "INTEGER"},
+        "confidence": {"type": "INTEGER"},
+        "reason": {"type": "STRING"},
+    },
+    "required": ["is_task", "type", "n_robots", "urgency", "confidence", "reason"],
+}
 
 
 def judge(image_path: str, prompt_file: str, thinking_budget: int | None,
           temperature: float = 0.0) -> dict:
     prompt = Path(prompt_file).read_text()
-    gc = {"temperature": temperature, "responseMimeType": "application/json"}
+    gc = {"temperature": temperature, "responseMimeType": "application/json",
+          "responseSchema": RESPONSE_SCHEMA}
     if thinking_budget is not None:
         gc["thinkingConfig"] = {"thinkingBudget": thinking_budget}
     resp = client.call(prompt, image_path=image_path, gen_config=gc,
