@@ -11,6 +11,7 @@ from pathlib import Path
 import requests
 
 MODEL = "qwen3-vl:8b"
+CONFIG_TAG = "qwen3vl8b-901cae-thinkoff-frozen_v1"  # 동결 설정 식별자
 HOST = "http://127.0.0.1:11434"
 ROOT = Path(__file__).parent
 CACHE_DIR = ROOT / "out" / "cache"
@@ -22,6 +23,7 @@ def _cache_key(image_bytes: bytes | None, prompt: str, gen_config: dict) -> str:
     h.update(image_bytes or b"")
     h.update(prompt.encode())
     h.update(MODEL.encode())
+    h.update(CONFIG_TAG.encode())
     h.update(json.dumps(gen_config, sort_keys=True).encode())
     return h.hexdigest()
 
