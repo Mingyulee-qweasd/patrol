@@ -9,6 +9,7 @@ import numpy as np
 from .env import load_env
 from .geometry import path_length_world
 from .memory import RobotMemory
+from .metrics import IdlenessMap
 from .policy import Params, gate, dispatch, early_convoke, next_interval, auction
 from .rendezvous import RendezvousManager
 from .robot import Robot, advance_hub, advance_flanker, nearest_sweep_d
@@ -67,6 +68,7 @@ class Episode:
         self.d0_s = d0_s
         self.coalition = {}   # cid -> {"xy", "crew": set 배정, "arrived": set}
         self.snaps = []       # 동작 확인 동영상용 장면 기록
+        self.idle_map = IdlenessMap(self.env)
         self.tasks_by_id = {x.tid: x for x in self.stream.tasks}
 
     # ── 감지·판단 사이클 ─────────────────────────────────────────
@@ -222,6 +224,7 @@ class Episode:
                     else:
                         advance_flanker(r, self.env, self.wpath[rid], self.wcum[rid])
                 self.sense(rid, now)
+            self.idle_map.update([r.xy for r in self.robots.values()], now)
             if int(now) % 20 == 0:  # 장면 기록 (20초마다)
                 self.snaps.append({
                     "t": now,
