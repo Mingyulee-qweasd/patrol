@@ -48,18 +48,33 @@ def call(prompt: str, image_path: str | Path | None = None,
         "model": MODEL,
         "messages": [msg],
         "stream": False,
+        "think": False,  # thinking이 답변 토큰을 소진해 빈 본문을 만드는 버그 회피 (동결 설정의 일부)
         "options": {"temperature": gen_config.get("temperature", 0.0)},
     }
     if "responseSchema" in gen_config:
         body["format"] = _to_ollama_schema(gen_config["responseSchema"])
 
     t0 = time.time()
-    r = requests.post(f"{HOST}/api/chat", json=body, timeout=600)
-    if r.status_code != 200:
-        _log_call({"ts": time.time(), "backend": "ollama", "tag": tag,
-                   "status": r.status_code, "error": r.text[:200]})
-        raise RuntimeError(f"Ollama 호출 실패 HTTP {r.status_code}: {r.text[:200]}")
-    resp = r.json()
+    resp = None
+    for attempt in range(3):
+        b = dict(body)
+        if attempt == 1:
+            b = {k: v for k, v in body.items() if k != "format"}  # 스키마 없이 재시도
+        elif attempt == 2:
+            b["options"] = dict(body.get("options", {}), temperature=0.3)
+        r = requests.post(f"{HOST}/api/chat", json=b, timeout=600)
+        if r.status_code != 200:
+            _log_call({"ts": time.time(), "backend": "ollama", "tag": tag,
+                       "status": r.status_code, "error": r.text[:200]})
+            raise RuntimeError(f"Ollama 호출 실패 HTTP {r.status_code}: {r.text[:200]}")
+        resp = r.json()
+        if resp.get("message", {}).get("content", "").strip():
+            if attempt:
+                _log_call({"ts": time.time(), "backend": "ollama", "tag": tag,
+                           "status": 200, "note": f"빈 응답 재시도 {attempt}회로 회복"})
+            break
+    if not resp.get("message", {}).get("content", "").strip():
+        raise RuntimeError("Ollama 빈 응답 3회 — 모델/서버 점검 필요")
     resp["_latency_s"] = round(time.time() - t0, 2)
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     cache_file.write_text(json.dumps(resp, ensure_ascii=False))
