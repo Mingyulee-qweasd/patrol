@@ -52,7 +52,9 @@ def synthetic_model(kinds: dict) -> dict:
 
 
 def load_model(path: str | Path) -> dict:
-    return json.loads(Path(path).read_text())
+    d = json.loads(Path(path).read_text())
+    # P0 산출물(error_model.json)은 {"stats", "model", "n_rows"} 래퍼 — 샘플러 스키마만 꺼냄
+    return d["model"] if "model" in d else d
 
 
 class VLMSampler:
@@ -69,5 +71,6 @@ class VLMSampler:
         ps /= ps.sum()
         j = cell["judgments"][int(self.rng.choice(len(ps), p=ps))]
         conf = float(np.clip(self.rng.normal(j["conf_mu"], j["conf_sd"]), 5, 100))
-        return {"is_task": j["is_task"], "n_hat": j["n"], "u_hat": j["u"],
+        # 실측 판정의 "beyond"(=4)는 전체 대수(3)로 상한 — 과대 추정은 도착/랑데뷰에서 자가 교정
+        return {"is_task": j["is_task"], "n_hat": min(j["n"], 3), "u_hat": j["u"],
                 "conf": conf}

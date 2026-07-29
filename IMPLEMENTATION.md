@@ -50,11 +50,14 @@
 - 최종 167장 (labels.csv): trash 13 / sharps 12 / carcass_s 25 / carcass_l 3 / bulky 16 /
   obstacle 19 / hazard 12 / normal 35 / ambiguous 32 (+mixed_tree_wire 태그 5)
 
-### measure_run.py — 본 측정 (가동 중)
+### measure_run.py — 본 측정 (완료 2026-07-30)
 - labels.csv × 2밴드 × 3문안 = **1,002판정**. 이어하기 = 캐시 + main_results.jsonl 기완료 스킵
 - 합성 far: 장변 200px 다운스케일(`images/far_synth/`) — 원거리 저해상 관측의 대리, 논문 방식 명시
 - 산출: `out/main_results.jsonl` (한 줄 = 한 판정: GT·밴드·문안·판정·지연)
-- 다음 단계: measure.py (혼동행렬·ECE·보정 매핑 → error_model.json) — 결과 나오면 작성
+- **완주**: 1,002판정 (재시도 후 무응답 20건 잔존 — 응답 실패율로 p_detect에 곱해 반영)
+- measure.py 채점 완료 → out/error_model.json. **4방향 독립 검증 통과** (재채점 일치·모델 무결성·
+  판정 반박 실패=조건부 GO·GT 정렬 감사). 주의: p_detect의 기본값(near .98/far .85)은 물리 가정
+  (실측은 판정 분포와 응답률만) — 논문 방법절 명시 + p_detect 민감도 스윕 후보
 
 ## 2. 시뮬레이터 — `sim/`
 
@@ -110,7 +113,9 @@
 - metrics.py: idleness 식1~5(정상상태 집계)·GT-u 가중 지연·오개입 TPR/FPR·인원부족 복귀률·소집 발화율·백로그
 - arms.py: full / no-sizing / fixed-rdv(TTC·ETC) / no-gate / solo-only / broadcast / greedy-reactive / role-adaptive
 - λ 재보정 (metrics 실측 기반), tests/ (기하·경매·추첨 분포·해석 검증 ±5%), exp/run_all.py + stats.py
-- measure.py (P0 채점) — 본 측정 완료 직후
+- ~~measure.py~~ ✅ (검증 통과, error_model.json 시뮬 주입 스모크 3 arm 통과)
+- GT 정비 6건 사용자 검수 대기 (images/review/gt_audit_sheet.jpg) → 재채점 (판정 재사용, 수 초)
+- W2 스윕 축 추가: obstacle far 탐지율 30~90% 민감도 (검증단 조건)
 
 ## 4. 버그·함정 일지 (시간순)
 
@@ -130,6 +135,8 @@
 | 12 | 로봇 좌표가 배열로 오염 | 복귀 탐색 빈손 시 pts[None] 인덱싱 | best_i None 가드 |
 | 13 | broadcast 랑데뷰 919회 집계 | 가상 회의가 물리 회의 흐름 재사용 | _assign_virtual 분리 + 물리 회합 차단 |
 | 14 | 확신 로그오즈 exp 넘침 | 무한 누적 | ±30 클립 |
+| 15 | load_model이 래퍼째 반환 → 샘플러 KeyError | error_model.json이 {stats,model} 래퍼 | 'model' 키 자동 언랩 (검증단 적발) |
+| 16 | 실측 n̂=4("beyond")가 3대 편대에 미정의 | 스키마엔 있으나 정책 미처리 | 샘플러에서 min(n,3) 상한 (검증단 적발) |
 
 ## 5. 진행 확인 방법
 

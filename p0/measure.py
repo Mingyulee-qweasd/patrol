@@ -23,21 +23,32 @@ def norm_n(v) -> int:
     return int(s) if s.isdigit() else 4  # "beyond" → 4
 
 
-def load_rows(path: Path) -> list[dict]:
+def load_rows(path: Path) -> tuple[list[dict], dict]:
+    """유효 판정 행 + (category,band)별 무응답 수.
+
+    무응답(3단 회복 실패)은 '그 관측은 아무것도 내놓지 못함' = 실측된 응답 실패율로
+    p_detect에 곱해 반영한다 (제외하고 잊는 게 아니라 감지 모델의 일부로).
+    """
     rows = [json.loads(l) for l in open(path)]
     ok = [r for r in rows if isinstance(r.get("judgment"), dict)]
-    if len(ok) < len(rows):
-        print(f"[주의] 판정 없는 행 {len(rows) - len(ok)}건 제외")
-    return ok
+    fails = defaultdict(int)
+    for r in rows:
+        if not isinstance(r.get("judgment"), dict):
+            cat = r["file"].split("/")[-2]
+            fails[(cat, r["band"])] += 1
+    if fails:
+        print(f"[반영] 무응답 {sum(fails.values())}건 → 해당 칸 p_detect에 응답률 곱함")
+    return ok, dict(fails)
 
 
-def build_error_model(rows: list[dict]) -> dict:
+def build_error_model(rows: list[dict], fails: dict) -> dict:
     """(category, band)별 판정 경험 분포. 문안 3종은 같은 조건의 반복 표본으로 합산."""
     cells = defaultdict(list)
     for r in rows:
         cells[(r["category"], r["band"])].append(r["judgment"])
     model = {}
     for (cat, band), js in sorted(cells.items()):
+        resp_rate = len(js) / (len(js) + fails.get((cat, band), 0))
         groups = defaultdict(list)  # (is_task, n, u) → conf 목록
         for j in js:
             key = (bool(j["is_task"]), norm_n(j["n_robots"]), int(j["urgency"]))
@@ -49,8 +60,9 @@ def build_error_model(rows: list[dict]) -> dict:
             judgments.append({"is_task": is_task, "n": n, "u": u,
                               "conf_mu": round(mu, 1), "conf_sd": round(max(sd, 2.0), 1),
                               "p": round(len(confs) / len(js), 4)})
-        model.setdefault(cat, {})[band] = {"p_detect": P_DETECT[band],
-                                           "judgments": judgments, "n_samples": len(js)}
+        model.setdefault(cat, {})[band] = {"p_detect": round(P_DETECT[band] * resp_rate, 4),
+                                           "judgments": judgments, "n_samples": len(js),
+                                           "resp_rate": round(resp_rate, 4)}
     return model
 
 
@@ -127,12 +139,13 @@ def report(rows: list[dict]) -> dict:
 
 def main():
     src = HERE / "out/main_results.jsonl"
-    rows = load_rows(src)
+    rows, fails = load_rows(src)
     total = 1002
-    partial = len(rows) < total
-    print(f"판정 {len(rows)}/{total}건 채점" + (" [부분 — 완주 후 재실행]" if partial else ""))
+    partial = len(rows) + sum(fails.values()) < total
+    print(f"판정 {len(rows)}/{total}건 채점 (무응답 {sum(fails.values())}건 반영)"
+          + (" [부분 — 완주 후 재실행]" if partial else " [완결]"))
     stats = report(rows)
-    model = build_error_model(rows)
+    model = build_error_model(rows, fails)
     dst = HERE / ("out/error_model_partial.json" if partial else "out/error_model.json")
     json.dump({"stats": stats, "model": model, "n_rows": len(rows)},
               open(dst, "w"), indent=1, ensure_ascii=False)
