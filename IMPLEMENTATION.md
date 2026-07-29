@@ -92,9 +92,9 @@
 ### runner.py — full arm 상태기계
 - 모드: patrol / detour / wait_site / at_rdv. 1스텝=1초
 - 도착 처리: 근접 최종 관측 → 비task면 중단(헛걸음) / GT 비task·hazard에 개입하면 오개입(minor/severe)
-  / 인원 미달 + 배정조 오는 중이면 **현장 대기** / 배정조 없으면 **회송**(n̂←GT 확정, 재안건)
+  / 인원 미달 + 배정조 오는 중이면 **현장 대기** / 배정조 없으면 **인원부족 복귀**(n̂←GT 확정, 재안건)
 - 버그 수정 이력: ①조기 소집 반복 발화 310회 → 후보당 1회 + **앞당기기만 허용**
-  ②배정조 선착이 대기 없이 회송 → coalition 집합 기록 + wait_site 모드 신설
+  ②배정조 선착이 대기 없이 인원부족 복귀 → coalition 집합 기록 + wait_site 모드 신설
   ③Trace.log 인자명 충돌(kind) → tkind로 회피
 - 스모크 (2h, seed 1): found 77 / dispatch_now 39 / agenda 16 / bounce 9 / assign 5 /
   convoke 1 / wait_site 1 / rendezvous 2 / complete 29 — 전 메커니즘 발화 확인
@@ -107,7 +107,7 @@
 - ~~경로 자율성 2건~~ ✅ 구현됨: ①복귀 시 주변 ±250m 창에서 방치 최대 지점으로 걸어가 재개
   ②재관측 예약 지점 들르기 (60m 이내·2회 상한·300s 쿨다운)
 - ~~metrics.py~~ ✅ / ~~λ 재보정~~ ✅ (0.25×) / arms 1~7 ✅ (role-adaptive만 잔여)
-- metrics.py: idleness 식1~5(정상상태 집계)·GT-u 가중 지연·오개입 TPR/FPR·회송률·소집 발화율·백로그
+- metrics.py: idleness 식1~5(정상상태 집계)·GT-u 가중 지연·오개입 TPR/FPR·인원부족 복귀률·소집 발화율·백로그
 - arms.py: full / no-sizing / fixed-rdv(TTC·ETC) / no-gate / solo-only / broadcast / sebs-reactive / role-adaptive
 - λ 재보정 (metrics 실측 기반), tests/ (기하·경매·추첨 분포·해석 검증 ±5%), exp/run_all.py + stats.py
 - measure.py (P0 채점) — 본 측정 완료 직후
@@ -125,7 +125,7 @@
 | 7 | 빈 응답이 계속 재현 | 빈 응답이 캐시에 저장됨 | 검증 후 저장 + 오염 캐시 청소 |
 | 8 | 허브가 측면의 2배 속도 | lap에 왕복 ×2 오적용 | 스냅샷 검증으로 발견·수정 |
 | 9 | convoke 310회 폭주 | 후보당 발화 제한 없음 + 재예약이 만남을 미래로 밀음 | 1회 플래그 + 앞당기기만 |
-| 10 | 코얼리션 선착 회송 | 배정 정보 미참조 | coalition 기록 + wait_site |
+| 10 | 코얼리션 선착 인원부족 복귀 | 배정 정보 미참조 | coalition 기록 + wait_site |
 | 11 | 재관측 방문 3,124회 폭주 | 방문 상한·쿨다운 없음 | 후보당 2회 + 300s 쿨다운 |
 | 12 | 로봇 좌표가 배열로 오염 | 복귀 탐색 빈손 시 pts[None] 인덱싱 | best_i None 가드 |
 | 13 | broadcast 랑데뷰 919회 집계 | 가상 회의가 물리 회의 흐름 재사용 | _assign_virtual 분리 + 물리 회합 차단 |
