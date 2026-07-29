@@ -1,0 +1,447 @@
+{
+ "stats": {
+  "tpr": 0.8673740053050398,
+  "fpr": 0.0,
+  "n_acc_near": 0.9085714285714286,
+  "n_base_near": 0.7657142857142857,
+  "n2_recall_near": 0.8292682926829268,
+  "n_acc_far": 0.9078947368421053,
+  "n_base_far": 0.7828947368421053,
+  "n2_recall_far": 0.9090909090909091,
+  "ece": 0.11631299734748113,
+  "prompt_stability": 0.9152542372881356
+ },
+ "model": {
+  "bulky": {
+   "far": {
+    "p_detect": 0.85,
+    "judgments": [
+     {
+      "is_task": false,
+      "n": 0,
+      "u": 0,
+      "conf_mu": 78.3,
+      "conf_sd": 20.5,
+      "p": 0.2
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 1,
+      "conf_mu": 82.5,
+      "conf_sd": 2.5,
+      "p": 0.0667
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 1,
+      "conf_mu": 73.8,
+      "conf_sd": 6.5,
+      "p": 0.4333
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 2,
+      "conf_mu": 75.6,
+      "conf_sd": 6.8,
+      "p": 0.3
+     }
+    ],
+    "n_samples": 30
+   },
+   "near": {
+    "p_detect": 0.98,
+    "judgments": [
+     {
+      "is_task": false,
+      "n": 0,
+      "u": 0,
+      "conf_mu": 75.0,
+      "conf_sd": 5.0,
+      "p": 0.0294
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 1,
+      "conf_mu": 85.0,
+      "conf_sd": 7.6,
+      "p": 0.1765
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 2,
+      "conf_mu": 85.0,
+      "conf_sd": 5.0,
+      "p": 0.0294
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 1,
+      "conf_mu": 85.2,
+      "conf_sd": 6.3,
+      "p": 0.6176
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 2,
+      "conf_mu": 84.0,
+      "conf_sd": 2.0,
+      "p": 0.1471
+     }
+    ],
+    "n_samples": 34
+   }
+  },
+  "carcass_l": {
+   "far": {
+    "p_detect": 0.85,
+    "judgments": [
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 1,
+      "conf_mu": 85.0,
+      "conf_sd": 5.0,
+      "p": 0.1111
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 2,
+      "conf_mu": 90.0,
+      "conf_sd": 5.0,
+      "p": 0.1111
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 3,
+      "conf_mu": 84.2,
+      "conf_sd": 4.5,
+      "p": 0.6667
+     },
+     {
+      "is_task": true,
+      "n": 3,
+      "u": 4,
+      "conf_mu": 85.0,
+      "conf_sd": 5.0,
+      "p": 0.1111
+     }
+    ],
+    "n_samples": 9
+   },
+   "near": {
+    "p_detect": 0.98,
+    "judgments": [
+     {
+      "is_task": false,
+      "n": 0,
+      "u": 0,
+      "conf_mu": 95.0,
+      "conf_sd": 5.0,
+      "p": 0.1111
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 2,
+      "conf_mu": 88.3,
+      "conf_sd": 2.4,
+      "p": 0.3333
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 3,
+      "conf_mu": 92.5,
+      "conf_sd": 2.5,
+      "p": 0.4444
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 4,
+      "conf_mu": 90.0,
+      "conf_sd": 5.0,
+      "p": 0.1111
+     }
+    ],
+    "n_samples": 9
+   }
+  },
+  "carcass_s": {
+   "far": {
+    "p_detect": 0.85,
+    "judgments": [
+     {
+      "is_task": false,
+      "n": 0,
+      "u": 0,
+      "conf_mu": 70.5,
+      "conf_sd": 18.8,
+      "p": 0.1486
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 1,
+      "conf_mu": 84.6,
+      "conf_sd": 3.5,
+      "p": 0.1892
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 2,
+      "conf_mu": 83.6,
+      "conf_sd": 7.8,
+      "p": 0.527
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 3,
+      "conf_mu": 83.8,
+      "conf_sd": 8.2,
+      "p": 0.0541
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 3,
+      "conf_mu": 82.5,
+      "conf_sd": 4.3,
+      "p": 0.0541
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 4,
+      "conf_mu": 90.0,
+      "conf_sd": 5.0,
+      "p": 0.027
+     }
+    ],
+    "n_samples": 74
+   },
+   "near": {
+    "p_detect": 0.98,
+    "judgments": [
+     {
+      "is_task": false,
+      "n": 0,
+      "u": 0,
+      "conf_mu": 95.0,
+      "conf_sd": 2.0,
+      "p": 0.08
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 1,
+      "conf_mu": 92.3,
+      "conf_sd": 4.1,
+      "p": 0.32
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 2,
+      "conf_mu": 92.2,
+      "conf_sd": 4.1,
+      "p": 0.5467
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 4,
+      "conf_mu": 95.0,
+      "conf_sd": 5.0,
+      "p": 0.0133
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 3,
+      "conf_mu": 85.0,
+      "conf_sd": 5.0,
+      "p": 0.0133
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 4,
+      "conf_mu": 95.0,
+      "conf_sd": 2.0,
+      "p": 0.0267
+     }
+    ],
+    "n_samples": 75
+   }
+  },
+  "sharps": {
+   "far": {
+    "p_detect": 0.85,
+    "judgments": [
+     {
+      "is_task": false,
+      "n": 0,
+      "u": 0,
+      "conf_mu": 55.8,
+      "conf_sd": 4.5,
+      "p": 0.1765
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 2,
+      "conf_mu": 70.0,
+      "conf_sd": 2.0,
+      "p": 0.0588
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 3,
+      "conf_mu": 80.0,
+      "conf_sd": 4.8,
+      "p": 0.3235
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 4,
+      "conf_mu": 81.7,
+      "conf_sd": 6.7,
+      "p": 0.4412
+     }
+    ],
+    "n_samples": 34
+   },
+   "near": {
+    "p_detect": 0.98,
+    "judgments": [
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 1,
+      "conf_mu": 85.0,
+      "conf_sd": 2.0,
+      "p": 0.0833
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 3,
+      "conf_mu": 91.2,
+      "conf_sd": 4.0,
+      "p": 0.3611
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 4,
+      "conf_mu": 93.5,
+      "conf_sd": 2.8,
+      "p": 0.5556
+     }
+    ],
+    "n_samples": 36
+   }
+  },
+  "trash": {
+   "far": {
+    "p_detect": 0.85,
+    "judgments": [
+     {
+      "is_task": false,
+      "n": 0,
+      "u": 0,
+      "conf_mu": 79.5,
+      "conf_sd": 14.6,
+      "p": 0.2632
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 1,
+      "conf_mu": 80.7,
+      "conf_sd": 8.6,
+      "p": 0.3684
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 2,
+      "conf_mu": 77.0,
+      "conf_sd": 9.0,
+      "p": 0.2632
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 1,
+      "conf_mu": 70.0,
+      "conf_sd": 15.0,
+      "p": 0.0526
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 2,
+      "conf_mu": 82.5,
+      "conf_sd": 7.5,
+      "p": 0.0526
+     }
+    ],
+    "n_samples": 38
+   },
+   "near": {
+    "p_detect": 0.98,
+    "judgments": [
+     {
+      "is_task": false,
+      "n": 0,
+      "u": 0,
+      "conf_mu": 92.8,
+      "conf_sd": 6.3,
+      "p": 0.2368
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 1,
+      "conf_mu": 92.2,
+      "conf_sd": 3.7,
+      "p": 0.5263
+     },
+     {
+      "is_task": true,
+      "n": 1,
+      "u": 2,
+      "conf_mu": 88.3,
+      "conf_sd": 4.7,
+      "p": 0.0789
+     },
+     {
+      "is_task": true,
+      "n": 2,
+      "u": 1,
+      "conf_mu": 88.3,
+      "conf_sd": 4.7,
+      "p": 0.1579
+     }
+    ],
+    "n_samples": 38
+   }
+  }
+ },
+ "n_rows": 377
+}
