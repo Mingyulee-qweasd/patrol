@@ -1,0 +1,28 @@
+# 환경: 직선형 (규칙 코드는 환경 불변 — 이 파일이 환경의 전부)
+name: simple
+route:                 # 메인 경로 폴리라인 (m), 왕복형
+  points: [[0, 0], [1000, 0]]
+  loop: false          # false = 끝에서 되돌아오는 왕복
+corridors:
+  left:  {width: 40}   # 노선 기준 +y 방향 폭 (v1: 구간 균일; park.yaml은 다각형)
+  right: {width: 40}
+robots:
+  speed_mps: 1.0       # 측면 스윕 속도 (허브 속도는 동기화 공식으로 유도)
+  sense_radius_m: 15
+  reliable_radius_m: 8 # 관측 품질 기준 (이 안이어야 idleness 리셋·근접 판정)
+patrol:
+  cell_m: 10           # idleness 셀 크기
+  sweep_spacing_m: 25  # 스윕 톱니 간격 (≤ 2×sense_radius 보장 커버)
+rendezvous:
+  meet_eps_s: 30       # 만남 소요 ε
+  grace_frac: 0.1      # 유예 = 0.1 × 간격
+tasks:
+  rho_target: 0.5      # 부하율 → λ 유도 (tasks.py)
+  # 온톨로지 3안: 타입, 필요 n, 긴급도 u, 발생 비중 (물리 임무), 비개입은 별도
+  types:
+    trash:    {n: 1, u: 1, share: 0.556}
+    bulky:    {n: 2, u: 2, share: 0.222}
+    carcass:  {n: 2, u: 3, share: 0.167}
+    obstacle: {n: 3, u: 4, share: 0.056}
+  nontask_ratio: 0.5   # 애매 사례 = 물리 임무 총량의 50%
+  hazard_share: 0.05   # 위험물 (개입 금지)

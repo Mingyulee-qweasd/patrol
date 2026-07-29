@@ -1,0 +1,1 @@
+{"ts": 1785307683.1257207, "cache_key": "97a774fb6e88c1fccbcd76eaf19dbb61b64338d170e5a0b93d1db2144a4ea50d", "tag": "smoke", "image": null, "status": 200, "attempt": 0, "usage": {"promptTokenCount": 9, "candidatesTokenCount": 9, "totalTokenCount": 118, "promptTokensDetails": [{"modality": "TEXT", "tokenCount": 9}], "thoughtsTokenCount": 100, "serviceTier": "standard"}}
