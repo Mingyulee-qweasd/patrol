@@ -112,10 +112,11 @@ def extract_json(resp: dict) -> dict:
     if txt.startswith("```"):
         txt = txt.split("```")[1]
         txt = txt[4:] if txt.startswith("json") else txt
-    start, end = txt.find("{"), txt.rfind("}")
-    if start == -1 or end == -1:
+    start = txt.find("{")
+    if start == -1:
         raise ValueError(f"JSON 미발견: {txt[:120]}")
-    return json.loads(txt[start:end + 1])
+    obj, _ = json.JSONDecoder().raw_decode(txt[start:])  # 첫 완결 오브젝트만 (뒤 잡음 무시)
+    return obj
 
 
 if __name__ == "__main__":
