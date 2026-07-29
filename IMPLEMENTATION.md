@@ -104,6 +104,8 @@
 
 ## 3. 남은 구현 (D5~)
 
+- **경로 자율성 2건 (07-29 사용자 지적으로 명시화)**: ①idleness 우선 방문 — 방치 오래된 셀을
+  스윕 순서에 반영 (지금은 지표로만) ②재관측 예약 지점의 명시적 경로 삽입 (지금은 자연 재방문 의존)
 - metrics.py: idleness 식1~5(정상상태 집계)·GT-u 가중 지연·오개입 TPR/FPR·회송률·소집 발화율·백로그
 - arms.py: full / no-sizing / fixed-rdv(TTC·ETC) / no-gate / solo-only / broadcast / sebs-reactive / role-adaptive
 - λ 재보정 (metrics 실측 기반), tests/ (기하·경매·추첨 분포·해석 검증 ±5%), exp/run_all.py + stats.py
