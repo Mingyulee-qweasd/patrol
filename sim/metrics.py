@@ -93,6 +93,7 @@ def compute(ep, steady_frac: float = 0.15) -> EpisodeMetrics:
     m.backlog_end = sum(1 for x in ep.stream.tasks
                         if x.gt_class == "task" and x.t_done is None
                         and x.t_spawn <= horizon)
+    m.idleness_avg, m.idleness_max = ep.idle_map.steady_stats(steady_frac)
     return m
 
 

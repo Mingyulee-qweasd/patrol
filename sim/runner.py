@@ -127,15 +127,52 @@ class Episode:
                 c.convoked = True
                 new_t = now + 0.5 * self.d0_s
                 if new_t < self.rdv.next.t:  # 앞당기기만 허용 (뒤로 밀기 금지)
-                    self.rdv.schedule(now, self.robots[0].hub_s, self.robots[0].hub_dir,
+                    self.rdv.schedule(now, self._hub().hub_s, self._hub().hub_dir,
                                       0.5 * self.d0_s)
                     self.trace.log(now, "convoke", rid=rid, cid=c.cid)
 
     # ── 도착 처리 (개입·회송·오개입) ─────────────────────────────
-    def _resume_at_idle(self, rid: int):
+    def _hub(self):
+        return next(r for r in self.robots.values() if r.role == "hub")
+
+    def _maybe_swap_role(self, r, now: float):
+        """role-adaptive: 임무에서 복귀할 때, 자리를 비운 로봇들의 자리(역할+경로+진행도)가
+        내 원래 자리보다 가까우면 통째로 맞바꿈 — 코얼리션 복귀 시 좌우 교차 이동 낭비 제거."""
+        if not self.arm.adaptive_roles:
+            return
+        away = [o for o in self.robots.values()
+                if o.rid != r.rid and o.mode in ("detour", "wait_site") and o.target_cid >= 0]
+
+        def slot_dist(owner):  # 그 자리의 현 진행 지점까지의 거리
+            if owner.role == "hub":
+                return float(np.linalg.norm(self.env.route.point_at(owner.hub_s) - r.xy))
+            pts, cum = self.wpath[owner.rid], self.wcum[owner.rid]
+            i = int(np.argmin(np.abs(cum - owner.sweep_d)))
+            return float(np.linalg.norm(pts[i] - r.xy))
+
+        best = min(away, key=slot_dist, default=None)
+        if best is None or slot_dist(best) + 20.0 >= slot_dist(r):  # 20m 이상 이득일 때만
+            return
+        # 스윕 경로는 역할에 붙는다 — 교환 후 rid 재귀속
+        paths = {o.role: (self.wpath.pop(o.rid), self.wcum.pop(o.rid))
+                 for o in (r, best) if o.role != "hub"}
+        r.role, best.role = best.role, r.role
+        for f in ("sweep_d", "sweep_dir", "hub_s", "hub_dir", "v"):
+            a, b = getattr(r, f), getattr(best, f)
+            setattr(r, f, b); setattr(best, f, a)
+        for o in (r, best):
+            if o.role != "hub":
+                self.wpath[o.rid], self.wcum[o.rid] = paths[o.role]
+        self.trace.log(now, "role_swap", rid=r.rid, took=r.role, other=best.rid)
+
+    def _resume_at_idle(self, rid: int, now: float = 0.0):
         """복귀 지점 = 현 위치 주변(±250m 스윕창)에서 방치 최대 지점 — 순간이동 없이 걸어서 (판단3)."""
         r = self.robots[rid]
+        self._maybe_swap_role(r, now)
         if r.role == "hub" or self.arm.sebs_patrol:
+            if r.role == "hub":
+                # 이탈 지점의 옛 진행도가 남아 순간이동성 복귀가 되는 것 방지 — 현 위치를 레일에 투영
+                r.hub_s = self.env.route.project(r.xy)
             return
         pts, cum = self.wpath[rid], self.wcum[rid]
         d_near = float(cum[int(np.argmin(np.linalg.norm(pts - r.xy, axis=1)))])
@@ -166,7 +203,7 @@ class Episode:
         mem = self.mem[rid]
         c = next((x for x in mem.items if x.cid == cid), None)
         r.mode = "patrol"; r.target = None; r.target_cid = -1
-        self._resume_at_idle(rid)
+        self._resume_at_idle(rid, now)
         if c is None:
             return
         task = self.tasks_by_id.get(c.gt_tid)
@@ -253,7 +290,7 @@ class Episode:
             self.trace.log(now, "assign", cid=c.cid, crew=crew, n_hat=c.n_hat)
         # 차기 랑데뷰 합의 (판단4)
         interval = next_interval(agenda, self.d0_s) if self.arm.adaptive_rdv else self.d0_s
-        self.rdv.schedule(now, self.robots[0].hub_s, self.robots[0].hub_dir, interval)
+        self.rdv.schedule(now, self._hub().hub_s, self._hub().hub_dir, interval)
         self.trace.log(now, "rendezvous", n_agenda=len(agenda), next_in=interval)
 
     # ── 메인 루프 ────────────────────────────────────────────────
@@ -346,8 +383,8 @@ class Episode:
                         self.hold_meeting(now, present=present)
                         self.trace.log(now, "rdv_partial", present=tuple(present))
                     else:  # 0~1대: 회의 무산 — 다음 만남만 예약 (기억 병합 없음)
-                        self.rdv.schedule(now, self.robots[0].hub_s,
-                                          self.robots[0].hub_dir, self.d0_s)
+                        self.rdv.schedule(now, self._hub().hub_s,
+                                          self._hub().hub_dir, self.d0_s)
                         self.trace.log(now, "rdv_skipped", present=tuple(present))
                     concluded = True
                 if concluded:
