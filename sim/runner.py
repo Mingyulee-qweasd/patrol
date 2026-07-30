@@ -19,6 +19,7 @@ from .arms import Arm, ARMS
 
 ARRIVE_R = 3.0     # 도착 판정 반경
 MEET_R = 10.0      # 랑데뷰 집결 판정 반경
+WAIT_TIMEOUT_S = 1200.0  # 현장 대기 시한 (노선 끝→끝 이동 ~1000s + 여유) — 순환 대기 교착 방지
 
 
 @dataclass
@@ -41,11 +42,13 @@ class Episode:
     def __init__(self, cfg_path: str, seed: int, horizon_s: float = 10800,
                  warmup_s: float = 1200, rho: float = 0.5,
                  params: Params | None = None, error_model: dict | None = None,
-                 arm: Arm | str = "full"):
+                 arm: Arm | str = "full", lambda_calib: float | None = None):
         self.arm = ARMS[arm] if isinstance(arm, str) else arm
         self.env = load_env(cfg_path)
         self.p = params or Params()
         self.horizon = horizon_s
+        if lambda_calib is not None:  # 부하 스윕용 오버라이드 (yaml 기본값 대체)
+            self.env.task_cfg["lambda_calib"] = lambda_calib
         self.stream = TaskStream(self.env, rho, seed, horizon_s, warmup_s)
         self.vlm = {rid: VLMSampler(error_model or synthetic_model(kinds_from_env(self.env)),
                                     seed * 7919 + rid)
@@ -70,6 +73,7 @@ class Episode:
         self.rdv.schedule(0.0, 0.0, +1, d0_s)
         self.d0_s = d0_s
         self.coalition = {}   # cid -> {"xy", "crew": set 배정, "arrived": set}
+        self.wait_since = {}  # rid -> wait_site 진입 시각 (교착 방지 시한용)
         self.snaps = []       # 동작 확인 동영상용 장면 기록
         self.idle_map = IdlenessMap(self.env)
         self.tasks_by_id = {x.tid: x for x in self.stream.tasks}
@@ -211,6 +215,13 @@ class Episode:
             return
         # 근접 최종 관측 (오류 모델 near 행)
         j = self.vlm[rid].observe(task.kind, "near")
+        if not c.committed:
+            # 재관측 방문 — 목적이 개입이 아니라 관측: 기억만 갱신하고 판단 재실행 (개입은
+            # 문턱+판단2를 통과해 커밋된 도착만 가능 — 방문이 오개입 경로가 되던 결함 수리)
+            if j is not None:
+                self.mem[rid].update(task.xy, j, "near", now, task.tid)
+                self.decide(rid, c, now)
+            return
         if j is None or not j["is_task"]:
             self.trace.log(now, "abort_nontask", rid=rid, tid=task.tid)
             return  # 헛걸음 — 개입 안 함
@@ -227,8 +238,9 @@ class Episode:
             self.trace.log(now, "complete", tid=task.tid, rid=rid, tkind=task.kind,
                            delay=now - task.t_spawn)
         elif self.coalition.get(c.cid) and len(self.coalition[c.cid]) >= task.n:
-            # 배정 조가 오는 중 — 현장 대기 (동료 도착 시 완료)
+            # 배정 조가 오는 중 — 현장 대기 (동료 도착 시 완료, 시한 초과 시 복귀)
             r.mode = "wait_site"; r.target = task.xy.copy(); r.target_cid = c.cid
+            self.wait_since[rid] = now
             self.trace.log(now, "wait_site", rid=rid, tid=task.tid)
         else:
             c.n_hat = task.n  # 근접 확정 (2단 갱신)
@@ -248,8 +260,11 @@ class Episode:
                 agenda.append(c)
         if not agenda:
             return
-        assign = auction(agenda, {rid: r.xy for rid, r in self.robots.items()},
-                         self.env.v_sweep, self.p)
+        # 현장 대기 중(핀 고정) 로봇은 새 낙찰에서 제외 — 순환 대기 형성 자체를 차단
+        free = {rid: r.xy for rid, r in self.robots.items() if r.mode != "wait_site"}
+        if not free:
+            return
+        assign = auction(agenda, free, self.env.v_sweep, self.p)
         for c in agenda:
             crew = assign.get(c.cid, [])
             c.committed = True
@@ -327,6 +342,16 @@ class Episode:
                             self.trace.log(now, "complete", tid=task.tid, rid=rid,
                                            tkind=task.kind, delay=now - task.t_spawn)
                             r.mode = "patrol"; r.target = None; r.target_cid = -1
+                        elif now - self.wait_since.get(rid, now) > WAIT_TIMEOUT_S:
+                            # 시한 초과 — 배정조가 안 옴 (다른 현장 대기 등 순환 교착 가능성)
+                            # → 인원부족 복귀와 동일 처리: 도착 철회, 재안건, 순찰 복귀
+                            task.arrived.discard(rid)
+                            if c.cid in self.coalition:
+                                self.coalition[c.cid].discard(rid)
+                            c.n_hat = task.n; c.committed = False; c.agenda = True
+                            r.mode = "patrol"; r.target = None; r.target_cid = -1
+                            self.trace.log(now, "wait_timeout", rid=rid, tid=task.tid)
+                            self._resume_at_idle(rid, now)
                     else:
                         r.mode = "patrol"; r.target = None; r.target_cid = -1
                 elif r.mode == "detour":
