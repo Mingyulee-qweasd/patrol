@@ -8,7 +8,7 @@ import numpy as np
 
 from .env import load_env
 from .geometry import path_length_world
-from .memory import RobotMemory
+from .memory import RobotMemory, MATCH_RADIUS
 from .metrics import IdlenessMap
 from .policy import Params, gate, dispatch, early_convoke, next_interval, auction
 from .rendezvous import RendezvousManager
@@ -19,7 +19,7 @@ from .arms import Arm, ARMS
 
 ARRIVE_R = 3.0     # 도착 판정 반경
 MEET_R = 10.0      # 랑데뷰 집결 판정 반경
-WAIT_TIMEOUT_S = 1200.0  # 현장 대기 시한 (노선 끝→끝 이동 ~1000s + 여유) — 순환 대기 교착 방지
+WAIT_TIMEOUT_S = 1800.0  # 현장 대기 시한 (끝→끝 이동 ~1000s + 앞 작업 최대 600s + 여유) — 교착 방지
 
 
 @dataclass
@@ -117,6 +117,10 @@ class Episode:
             decision = "skip"  # solo-only: 다수 임무는 다룰 수단 없음
         else:
             decision = dispatch(c, r.xy, r.v, t_to_rdv, can_return, self.p)
+            if decision == "agenda" and not c.near_confirmed:
+                # 접근 우선 조정 (경로 3): 원거리 n̂은 무정보(P0 실측)이므로 그걸로 안건화하지
+                # 않는다 — 먼저 접근해 근접 확정 후, n̂≥2로 판명되면 그때 안건화 (도착 처리에서)
+                decision = "now"
         if decision == "skip":
             return
         if decision == "now":
@@ -220,7 +224,13 @@ class Episode:
             r.mode = "patrol"; r.target = None; r.target_cid = -1
             return
         mem = self.mem[rid]
-        c = next((x for x in mem.items if x.cid == cid), None)
+        # 후보 식별은 '현재 서 있는 자리' 기준 — cid는 로봇별 일련번호라 배정 경유 도착에서
+        # 남의 번호가 내 다른 후보를 가리키는 혼선이 있었음 (#26). 번호+위치 일치 우선, 위치 차선.
+        c = next((x for x in mem.items
+                  if x.cid == cid and np.linalg.norm(x.xy - r.xy) < MATCH_RADIUS), None)
+        if c is None:
+            c = next((x for x in mem.items
+                      if np.linalg.norm(x.xy - r.xy) < MATCH_RADIUS), None)
         r.mode = "patrol"; r.target = None; r.target_cid = -1
         self._resume_at_idle(rid, now)
         if c is None:
@@ -240,6 +250,8 @@ class Episode:
         if j is None or not j["is_task"]:
             self.trace.log(now, "abort_nontask", rid=rid, tid=task.tid)
             return  # 헛걸음 — 개입 안 함
+        # 근접 판정으로 기억 갱신 (2단: n̂·û를 근접 값으로 대체 — 접근 우선 조정의 핵심 정보)
+        self.mem[rid].update(task.xy, j, "near", now, task.tid)
         if task.gt_class in ("nontask", "hazard"):
             sev = "severe" if task.gt_class == "hazard" else "minor"
             task.t_done = now  # 개입해버림 (오개입)
@@ -249,13 +261,16 @@ class Episode:
         task.arrived.add(rid)
         if len(task.arrived) >= task.n:
             self._start_work(task, rid, now)
-        elif self.coalition.get(c.cid) and len(self.coalition[c.cid]) >= task.n:
-            # 배정 조가 오는 중 — 현장 대기 (동료 도착 시 완료, 시한 초과 시 복귀)
+        elif self.coalition.get(c.cid) and len(self.coalition[c.cid]) >= c.n_hat:
+            # 배정 조가 오는 중 (자기 추정 기준) — 현장 대기 (동료 도착 시 완료, 시한 초과 시 복귀)
             r.mode = "wait_site"; r.target = task.xy.copy(); r.target_cid = c.cid
             self.wait_since[rid] = now
             self.trace.log(now, "wait_site", rid=rid, tid=task.tid)
         else:
-            c.n_hat = task.n  # 근접 확정 (2단 갱신)
+            # 인원부족 복귀: 물리적 실패가 알려주는 것은 "지금 인원으론 부족" — 하한만 상향
+            # (종전엔 GT 대수를 그대로 열람하는 이상화 + 떠난 로봇이 도착 명단에 유령으로 잔존 #25)
+            c.n_hat = max(c.n_hat, len(task.arrived) + 1)
+            task.arrived.discard(rid)
             c.committed = False; c.agenda = True
             self.trace.log(now, "bounce", rid=rid, tid=task.tid, need=task.n)
 

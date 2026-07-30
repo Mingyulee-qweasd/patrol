@@ -17,6 +17,7 @@ class Params:
     meet_eps: float = 30.0        # 협의 소요
     assign_travel_est: float = 120.0  # Δ의 "배정 로봇 이동" 추정 상수 (v1)
     convoke_cost_s: float = 180.0     # 조기 소집 비용 (요격 우회 상수 추정)
+    work_est_s: float = 300.0         # 경매 부하 계산용 작업 시간 추정 (온톨로지 중앙값 근사)
 
 
 # ── 판단1: 확신 문턱 ──────────────────────────────────────────────
@@ -72,15 +73,19 @@ def auction(agenda: list[Candidate], robot_xys: dict, v: float,
     이동 누적을 반영해 다음 안건 입찰 위치가 갱신된다 (경로 연쇄).
     """
     pos = {r: np.asarray(xy, float).copy() for r, xy in robot_xys.items()}
+    load = {r: 0.0 for r in robot_xys}   # 이미 낙찰받은 일감의 누적 시간 (이동+작업 추정)
     out = {}
-    for c in sorted(agenda, key=lambda x: -x.u_hat):
+    # 여럿-임무 우선 (자유로운 로봇 짝이 필요) → 그 안에서 긴급 우선
+    for c in sorted(agenda, key=lambda x: (-(x.n_hat >= 2), -x.u_hat)):
         bids = []
         for r, xy in pos.items():
             travel = float(np.linalg.norm(c.xy - xy)) / v
-            bids.append((travel + p.w_idle * 2 * travel, r))
+            # 짐(load)을 물고 있으면 파트너를 그만큼 기다리게 함 — 코얼리션 동시 도착을 위해 반영
+            bids.append((load[r] + travel + p.w_idle * 2 * travel, r))
         bids.sort()
         winners = [r for _, r in bids[:max(1, c.n_hat)]]
         out[c.cid] = winners
         for r in winners:
             pos[r] = c.xy.copy()  # 낙찰자는 그 지점에서 다음 입찰
+            load[r] += float(bids[[b[1] for b in bids].index(r)][0]) + p.work_est_s
     return out
