@@ -380,7 +380,12 @@ class Episode:
                 elif r.mode == "detour":
                     if r.move_towards(r.target):
                         self.on_arrival(rid, r.target_cid, now)
-                elif due and r.mode != "at_rdv":
+                elif (r.mode != "at_rdv" and not self.arm.broadcast
+                      and self.rdv.next is not None
+                      and np.linalg.norm(r.xy - meet_xy) / r.v > (self.rdv.next.t - now) + 5.0):
+                    # 집결 리드타임: 정상 순찰 흐름으로는 약속에 지각할 로봇만 조기 직행
+                    # (종전엔 약속 시각에야 출발해 유예를 넘김 → 만남 70% 무산 — 일지 #24.
+                    #  대형에 맞춰 도는 로봇은 자연 도착하므로 순찰 유지 — 해석 검증 보존)
                     if r.move_towards(meet_xy):
                         r.mode = "at_rdv"
                 elif self.arm.sebs_patrol:
@@ -430,9 +435,9 @@ class Episode:
                     if len(present) >= 2:
                         self.hold_meeting(now, present=present)
                         self.trace.log(now, "rdv_partial", present=tuple(present))
-                    else:  # 0~1대: 회의 무산 — 다음 만남만 예약 (기억 병합 없음)
+                    else:  # 0~1대: 회의 무산 — 절반 간격으로 재시도 (전 간격 벌점 완화)
                         self.rdv.schedule(now, self._hub().hub_s,
-                                          self._hub().hub_dir, self.d0_s)
+                                          self._hub().hub_dir, 0.5 * self.d0_s)
                         self.trace.log(now, "rdv_skipped", present=tuple(present))
                     concluded = True
                 if concluded:
