@@ -293,8 +293,30 @@ class Episode:
         self.mem[b].merge_from(self.mem[a])
         self.trace.log(now, "encounter", pair=(a, b))
         ra, rb = self.robots[a], self.robots[b]
+        # ① 합류: 한쪽이 여럿-임무로 가는 중이거나 현장에서 대기 중이면 파트너가 동행
+        #    (대기 로봇 옆을 지나는 순찰 로봇이 통신 반경에 들어온 것도 조우)
+        for rid_c, rid_p in ((a, b), (b, a)):
+            rc, rp = self.robots[rid_c], self.robots[rid_p]
+            if rc.mode not in ("detour", "wait_site") or rp.mode != "patrol" or rc.target_cid < 0:
+                continue
+            cc = next((x for x in self.mem[rid_c].items if x.cid == rc.target_cid), None)
+            if cc is None or cc.n_hat < 2 or not cc.near_confirmed:
+                continue
+            task = self.tasks_by_id.get(cc.gt_tid)
+            if task is None or not task.active:
+                continue
+            cp = next((x for x in self.mem[rid_p].items
+                       if np.linalg.norm(x.xy - cc.xy) < MATCH_RADIUS), None)
+            self.coalition[cc.cid] = {a, b}
+            if cp is not None:
+                cp.committed = True
+                self.coalition[cp.cid] = {a, b}
+            rp.mode = "detour"; rp.target = cc.xy.copy()
+            rp.target_cid = cp.cid if cp is not None else cc.cid
+            self.trace.log(now, "pair_join", pair=(rid_c, rid_p), tid=cc.gt_tid)
+            return
         if ra.mode != "patrol" or rb.mode != "patrol":
-            return  # 둘 다 손이 비어 있을 때만 즉석 약속
+            return  # (합류 불가 시) 둘 다 손이 비어 있을 때만 즉석 약속
         mid = (ra.xy + rb.xy) / 2
         best, best_key = None, None
         for c in self.mem[a].items:
