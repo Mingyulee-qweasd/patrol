@@ -58,18 +58,61 @@ def load_model(path: str | Path) -> dict:
 
 
 class VLMSampler:
-    def __init__(self, model: dict, seed: int):
+    """오류 = 개체 고정 성분(맹점) + 관측 흔들림 성분으로 분해 재생.
+
+    맹점: 실측 문안 만장일치-오답률(p_blind)만큼의 개체는 몇 번을 봐도 같은 오판을 반환
+    (개체 성질이므로 world_seed+개체 id에서 유도 — 전 로봇이 같은 맹점을 공유).
+    흔들림: 나머지 오답 질량. 총 오답률은 실측과 동일하게 유지 (구조만 재배치).
+    oid=None이면 종전과 동일한 순수 흔들림 동작 (개발·테스트 호환).
+    """
+
+    def __init__(self, model: dict, seed: int, world_seed: int | None = None):
         self.model = model
         self.rng = np.random.default_rng(seed)
+        self.world_seed = world_seed
+        self._blind: dict = {}   # (oid, band) → None(보통 개체) | 고정 오판 dict
 
-    def observe(self, gt_kind: str, band: str) -> dict | None:
+    def _blind_state(self, band: str, oid, cell: dict):
+        key = (oid, band)
+        if key in self._blind:
+            return self._blind[key]
+        state = None
+        p_blind = cell.get("p_blind", 0.0)
+        wrong = [j for j in cell["judgments"] if j.get("wrong")]
+        if p_blind > 0 and wrong:
+            rng = np.random.default_rng(hash((self.world_seed, oid, band)) & 0x7FFFFFFF)
+            if rng.random() < p_blind:
+                ps = np.array([j["p"] for j in wrong], float)
+                ps /= ps.sum()
+                state = wrong[int(rng.choice(len(wrong), p=ps))]
+        self._blind[key] = state
+        return state
+
+    def observe(self, gt_kind: str, band: str, oid=None) -> dict | None:
         """관측 이벤트 → 판정 or None(미탐). 반환: {is_task, n̂, û, conf(0~100)}."""
         cell = self.model[gt_kind][band]
         if self.rng.random() > cell["p_detect"]:
             return None
-        ps = np.array([j["p"] for j in cell["judgments"]], float)
-        ps /= ps.sum()
-        j = cell["judgments"][int(self.rng.choice(len(ps), p=ps))]
+        blind = (self._blind_state(band, oid, cell)
+                 if oid is not None and self.world_seed is not None else None)
+        if blind is not None:
+            j = blind
+        else:
+            js = cell["judgments"]
+            ps = np.array([x["p"] for x in js], float)
+            p_blind = cell.get("p_blind", 0.0) if oid is not None and self.world_seed is not None else 0.0
+            if p_blind > 0:
+                # 보통 개체의 오답 질량 w_n: p_blind + (1-p_blind)·w_n = 실측 총오답률 이 되도록
+                wmask = np.array([bool(x.get("wrong")) for x in js])
+                tw = float(ps[wmask].sum())
+                if tw > 0 and wmask.any() and (~wmask).any():
+                    w_n = max(tw - p_blind, 0.0) / (1.0 - p_blind)
+                    ps[wmask] *= w_n / tw
+                    rsum = float(ps[~wmask].sum())
+                    if rsum > 0:
+                        ps[~wmask] *= (1.0 - w_n) / rsum
+            ps /= ps.sum()
+            j = js[int(self.rng.choice(len(ps), p=ps))]
         conf = float(np.clip(self.rng.normal(j["conf_mu"], j["conf_sd"]), 5, 100))
         # 실측 판정의 "beyond"(=4)는 전체 대수(3)로 상한 — 과대 추정은 도착/랑데뷰에서 자가 교정
         return {"is_task": j["is_task"], "n_hat": min(j["n"], 3), "u_hat": j["u"],

@@ -15,11 +15,13 @@
   "ambiguous": {
    "far": {
     "p_detect": 0.85,
+    "p_blind": 0.0,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": false,
       "conf_mu": 86.2,
       "conf_sd": 13.8,
       "p": 0.9583
@@ -28,6 +30,7 @@
       "is_task": false,
       "n": 0,
       "u": 1,
+      "wrong": false,
       "conf_mu": 95.0,
       "conf_sd": 5.0,
       "p": 0.0104
@@ -36,6 +39,7 @@
       "is_task": true,
       "n": 1,
       "u": 1,
+      "wrong": true,
       "conf_mu": 70.0,
       "conf_sd": 5.0,
       "p": 0.0104
@@ -44,6 +48,7 @@
       "is_task": true,
       "n": 1,
       "u": 2,
+      "wrong": true,
       "conf_mu": 77.5,
       "conf_sd": 7.5,
       "p": 0.0208
@@ -54,11 +59,13 @@
    },
    "near": {
     "p_detect": 0.98,
+    "p_blind": 0.0625,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": false,
       "conf_mu": 94.9,
       "conf_sd": 2.0,
       "p": 0.9271
@@ -67,6 +74,7 @@
       "is_task": false,
       "n": 0,
       "u": 1,
+      "wrong": false,
       "conf_mu": 95.0,
       "conf_sd": 5.0,
       "p": 0.0104
@@ -75,6 +83,7 @@
       "is_task": true,
       "n": 1,
       "u": 1,
+      "wrong": true,
       "conf_mu": 92.5,
       "conf_sd": 2.5,
       "p": 0.0417
@@ -83,6 +92,7 @@
       "is_task": true,
       "n": 1,
       "u": 2,
+      "wrong": true,
       "conf_mu": 92.5,
       "conf_sd": 2.5,
       "p": 0.0208
@@ -95,11 +105,13 @@
   "bulky": {
    "far": {
     "p_detect": 0.7792,
+    "p_blind": 0.0625,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": true,
       "conf_mu": 78.3,
       "conf_sd": 20.5,
       "p": 0.1364
@@ -108,6 +120,7 @@
       "is_task": true,
       "n": 1,
       "u": 1,
+      "wrong": false,
       "conf_mu": 80.0,
       "conf_sd": 4.1,
       "p": 0.0682
@@ -116,6 +129,7 @@
       "is_task": true,
       "n": 1,
       "u": 2,
+      "wrong": false,
       "conf_mu": 85.0,
       "conf_sd": 2.0,
       "p": 0.0455
@@ -124,6 +138,7 @@
       "is_task": true,
       "n": 2,
       "u": 1,
+      "wrong": false,
       "conf_mu": 74.7,
       "conf_sd": 6.7,
       "p": 0.3636
@@ -132,6 +147,7 @@
       "is_task": true,
       "n": 2,
       "u": 2,
+      "wrong": false,
       "conf_mu": 77.1,
       "conf_sd": 7.0,
       "p": 0.3182
@@ -140,6 +156,7 @@
       "is_task": true,
       "n": 2,
       "u": 3,
+      "wrong": false,
       "conf_mu": 78.3,
       "conf_sd": 9.4,
       "p": 0.0682
@@ -150,11 +167,13 @@
    },
    "near": {
     "p_detect": 0.9392,
+    "p_blind": 0.0,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": true,
       "conf_mu": 75.0,
       "conf_sd": 5.0,
       "p": 0.0217
@@ -163,6 +182,7 @@
       "is_task": true,
       "n": 1,
       "u": 1,
+      "wrong": false,
       "conf_mu": 85.0,
       "conf_sd": 7.6,
       "p": 0.1304
@@ -171,6 +191,7 @@
       "is_task": true,
       "n": 1,
       "u": 2,
+      "wrong": false,
       "conf_mu": 85.0,
       "conf_sd": 5.0,
       "p": 0.0217
@@ -179,6 +200,7 @@
       "is_task": true,
       "n": 2,
       "u": 1,
+      "wrong": false,
       "conf_mu": 85.2,
       "conf_sd": 6.0,
       "p": 0.5
@@ -187,6 +209,7 @@
       "is_task": true,
       "n": 2,
       "u": 2,
+      "wrong": false,
       "conf_mu": 86.7,
       "conf_sd": 3.7,
       "p": 0.2609
@@ -195,6 +218,7 @@
       "is_task": true,
       "n": 2,
       "u": 3,
+      "wrong": false,
       "conf_mu": 86.7,
       "conf_sd": 2.4,
       "p": 0.0652
@@ -207,11 +231,13 @@
   "carcass_l": {
    "far": {
     "p_detect": 0.85,
+    "p_blind": 0.0,
     "judgments": [
      {
       "is_task": true,
       "n": 1,
       "u": 1,
+      "wrong": false,
       "conf_mu": 85.0,
       "conf_sd": 5.0,
       "p": 0.1111
@@ -220,6 +246,7 @@
       "is_task": true,
       "n": 2,
       "u": 2,
+      "wrong": false,
       "conf_mu": 90.0,
       "conf_sd": 5.0,
       "p": 0.1111
@@ -228,6 +255,7 @@
       "is_task": true,
       "n": 2,
       "u": 3,
+      "wrong": false,
       "conf_mu": 84.2,
       "conf_sd": 4.5,
       "p": 0.6667
@@ -236,6 +264,7 @@
       "is_task": true,
       "n": 3,
       "u": 4,
+      "wrong": false,
       "conf_mu": 85.0,
       "conf_sd": 5.0,
       "p": 0.1111
@@ -246,11 +275,13 @@
    },
    "near": {
     "p_detect": 0.98,
+    "p_blind": 0.0,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": true,
       "conf_mu": 95.0,
       "conf_sd": 5.0,
       "p": 0.1111
@@ -259,6 +290,7 @@
       "is_task": true,
       "n": 2,
       "u": 2,
+      "wrong": false,
       "conf_mu": 88.3,
       "conf_sd": 2.4,
       "p": 0.3333
@@ -267,6 +299,7 @@
       "is_task": true,
       "n": 2,
       "u": 3,
+      "wrong": false,
       "conf_mu": 92.5,
       "conf_sd": 2.5,
       "p": 0.4444
@@ -275,6 +308,7 @@
       "is_task": true,
       "n": 2,
       "u": 4,
+      "wrong": false,
       "conf_mu": 90.0,
       "conf_sd": 5.0,
       "p": 0.1111
@@ -287,11 +321,13 @@
   "carcass_s": {
    "far": {
     "p_detect": 0.85,
+    "p_blind": 0.12,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": true,
       "conf_mu": 69.2,
       "conf_sd": 18.5,
       "p": 0.16
@@ -300,6 +336,7 @@
       "is_task": true,
       "n": 1,
       "u": 1,
+      "wrong": false,
       "conf_mu": 84.6,
       "conf_sd": 3.5,
       "p": 0.1867
@@ -308,6 +345,7 @@
       "is_task": true,
       "n": 1,
       "u": 2,
+      "wrong": false,
       "conf_mu": 83.6,
       "conf_sd": 7.8,
       "p": 0.52
@@ -316,6 +354,7 @@
       "is_task": true,
       "n": 1,
       "u": 3,
+      "wrong": false,
       "conf_mu": 83.8,
       "conf_sd": 8.2,
       "p": 0.0533
@@ -324,6 +363,7 @@
       "is_task": true,
       "n": 2,
       "u": 3,
+      "wrong": false,
       "conf_mu": 82.5,
       "conf_sd": 4.3,
       "p": 0.0533
@@ -332,6 +372,7 @@
       "is_task": true,
       "n": 2,
       "u": 4,
+      "wrong": false,
       "conf_mu": 90.0,
       "conf_sd": 5.0,
       "p": 0.0267
@@ -342,11 +383,13 @@
    },
    "near": {
     "p_detect": 0.98,
+    "p_blind": 0.08,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": true,
       "conf_mu": 95.0,
       "conf_sd": 2.0,
       "p": 0.08
@@ -355,6 +398,7 @@
       "is_task": true,
       "n": 1,
       "u": 1,
+      "wrong": false,
       "conf_mu": 92.3,
       "conf_sd": 4.1,
       "p": 0.32
@@ -363,6 +407,7 @@
       "is_task": true,
       "n": 1,
       "u": 2,
+      "wrong": false,
       "conf_mu": 92.2,
       "conf_sd": 4.1,
       "p": 0.5467
@@ -371,6 +416,7 @@
       "is_task": true,
       "n": 1,
       "u": 4,
+      "wrong": false,
       "conf_mu": 95.0,
       "conf_sd": 5.0,
       "p": 0.0133
@@ -379,6 +425,7 @@
       "is_task": true,
       "n": 2,
       "u": 3,
+      "wrong": false,
       "conf_mu": 85.0,
       "conf_sd": 5.0,
       "p": 0.0133
@@ -387,6 +434,7 @@
       "is_task": true,
       "n": 2,
       "u": 4,
+      "wrong": false,
       "conf_mu": 95.0,
       "conf_sd": 2.0,
       "p": 0.0267
@@ -399,11 +447,13 @@
   "hazard": {
    "far": {
     "p_detect": 0.8028,
+    "p_blind": 0.1667,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": false,
       "conf_mu": 82.6,
       "conf_sd": 14.7,
       "p": 0.8529
@@ -412,6 +462,7 @@
       "is_task": true,
       "n": 1,
       "u": 1,
+      "wrong": true,
       "conf_mu": 72.5,
       "conf_sd": 2.5,
       "p": 0.0588
@@ -420,6 +471,7 @@
       "is_task": true,
       "n": 2,
       "u": 3,
+      "wrong": true,
       "conf_mu": 70.0,
       "conf_sd": 2.0,
       "p": 0.0588
@@ -428,6 +480,7 @@
       "is_task": true,
       "n": 2,
       "u": 4,
+      "wrong": true,
       "conf_mu": 70.0,
       "conf_sd": 5.0,
       "p": 0.0294
@@ -438,11 +491,13 @@
    },
    "near": {
     "p_detect": 0.9256,
+    "p_blind": 0.0833,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": false,
       "conf_mu": 92.5,
       "conf_sd": 5.8,
       "p": 0.7647
@@ -451,6 +506,7 @@
       "is_task": false,
       "n": 0,
       "u": 1,
+      "wrong": false,
       "conf_mu": 85.0,
       "conf_sd": 2.0,
       "p": 0.0588
@@ -459,6 +515,7 @@
       "is_task": false,
       "n": 0,
       "u": 4,
+      "wrong": false,
       "conf_mu": 95.0,
       "conf_sd": 2.0,
       "p": 0.0588
@@ -467,6 +524,7 @@
       "is_task": true,
       "n": 2,
       "u": 3,
+      "wrong": true,
       "conf_mu": 85.0,
       "conf_sd": 5.0,
       "p": 0.0294
@@ -475,6 +533,7 @@
       "is_task": true,
       "n": 2,
       "u": 4,
+      "wrong": true,
       "conf_mu": 86.7,
       "conf_sd": 2.4,
       "p": 0.0882
@@ -487,11 +546,13 @@
   "normal": {
    "far": {
     "p_detect": 0.85,
+    "p_blind": 0.0286,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": false,
       "conf_mu": 87.5,
       "conf_sd": 9.1,
       "p": 0.9524
@@ -500,6 +561,7 @@
       "is_task": false,
       "n": 0,
       "u": 1,
+      "wrong": false,
       "conf_mu": 90.0,
       "conf_sd": 5.0,
       "p": 0.019
@@ -508,6 +570,7 @@
       "is_task": true,
       "n": 2,
       "u": 4,
+      "wrong": true,
       "conf_mu": 85.0,
       "conf_sd": 2.0,
       "p": 0.019
@@ -516,6 +579,7 @@
       "is_task": true,
       "n": 4,
       "u": 4,
+      "wrong": true,
       "conf_mu": 85.0,
       "conf_sd": 5.0,
       "p": 0.0095
@@ -526,11 +590,13 @@
    },
    "near": {
     "p_detect": 0.9707,
+    "p_blind": 0.0571,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": false,
       "conf_mu": 95.0,
       "conf_sd": 2.0,
       "p": 0.9327
@@ -539,6 +605,7 @@
       "is_task": false,
       "n": 0,
       "u": 1,
+      "wrong": false,
       "conf_mu": 95.0,
       "conf_sd": 5.0,
       "p": 0.0096
@@ -547,6 +614,7 @@
       "is_task": true,
       "n": 2,
       "u": 4,
+      "wrong": true,
       "conf_mu": 87.5,
       "conf_sd": 2.5,
       "p": 0.0385
@@ -555,6 +623,7 @@
       "is_task": true,
       "n": 3,
       "u": 4,
+      "wrong": true,
       "conf_mu": 95.0,
       "conf_sd": 5.0,
       "p": 0.0096
@@ -563,6 +632,7 @@
       "is_task": true,
       "n": 4,
       "u": 4,
+      "wrong": true,
       "conf_mu": 85.0,
       "conf_sd": 5.0,
       "p": 0.0096
@@ -575,11 +645,13 @@
   "obstacle": {
    "far": {
     "p_detect": 0.8053,
+    "p_blind": 0.5789,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": true,
       "conf_mu": 81.2,
       "conf_sd": 12.2,
       "p": 0.6667
@@ -588,6 +660,7 @@
       "is_task": false,
       "n": 0,
       "u": 1,
+      "wrong": true,
       "conf_mu": 75.0,
       "conf_sd": 5.0,
       "p": 0.0185
@@ -596,6 +669,7 @@
       "is_task": true,
       "n": 1,
       "u": 1,
+      "wrong": false,
       "conf_mu": 70.0,
       "conf_sd": 5.0,
       "p": 0.0185
@@ -604,6 +678,7 @@
       "is_task": true,
       "n": 2,
       "u": 3,
+      "wrong": false,
       "conf_mu": 70.0,
       "conf_sd": 5.0,
       "p": 0.0185
@@ -612,6 +687,7 @@
       "is_task": true,
       "n": 2,
       "u": 4,
+      "wrong": false,
       "conf_mu": 76.2,
       "conf_sd": 9.6,
       "p": 0.2222
@@ -620,6 +696,7 @@
       "is_task": true,
       "n": 3,
       "u": 4,
+      "wrong": false,
       "conf_mu": 85.0,
       "conf_sd": 5.0,
       "p": 0.0185
@@ -628,6 +705,7 @@
       "is_task": true,
       "n": 4,
       "u": 4,
+      "wrong": false,
       "conf_mu": 70.0,
       "conf_sd": 2.0,
       "p": 0.037
@@ -638,11 +716,13 @@
    },
    "near": {
     "p_detect": 0.9284,
+    "p_blind": 0.2632,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": true,
       "conf_mu": 95.0,
       "conf_sd": 2.0,
       "p": 0.3333
@@ -651,6 +731,7 @@
       "is_task": true,
       "n": 1,
       "u": 2,
+      "wrong": false,
       "conf_mu": 85.0,
       "conf_sd": 5.0,
       "p": 0.0185
@@ -659,6 +740,7 @@
       "is_task": true,
       "n": 2,
       "u": 2,
+      "wrong": false,
       "conf_mu": 87.5,
       "conf_sd": 2.5,
       "p": 0.037
@@ -667,6 +749,7 @@
       "is_task": true,
       "n": 2,
       "u": 4,
+      "wrong": false,
       "conf_mu": 88.8,
       "conf_sd": 3.6,
       "p": 0.4444
@@ -675,6 +758,7 @@
       "is_task": true,
       "n": 3,
       "u": 4,
+      "wrong": false,
       "conf_mu": 92.9,
       "conf_sd": 3.6,
       "p": 0.1296
@@ -683,6 +767,7 @@
       "is_task": true,
       "n": 4,
       "u": 3,
+      "wrong": false,
       "conf_mu": 85.0,
       "conf_sd": 5.0,
       "p": 0.0185
@@ -691,6 +776,7 @@
       "is_task": true,
       "n": 4,
       "u": 4,
+      "wrong": false,
       "conf_mu": 95.0,
       "conf_sd": 5.0,
       "p": 0.0185
@@ -703,11 +789,13 @@
   "sharps": {
    "far": {
     "p_detect": 0.8028,
+    "p_blind": 0.0833,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": true,
       "conf_mu": 55.8,
       "conf_sd": 4.5,
       "p": 0.1765
@@ -716,6 +804,7 @@
       "is_task": true,
       "n": 1,
       "u": 2,
+      "wrong": false,
       "conf_mu": 70.0,
       "conf_sd": 2.0,
       "p": 0.0588
@@ -724,6 +813,7 @@
       "is_task": true,
       "n": 1,
       "u": 3,
+      "wrong": false,
       "conf_mu": 80.0,
       "conf_sd": 4.8,
       "p": 0.3235
@@ -732,6 +822,7 @@
       "is_task": true,
       "n": 1,
       "u": 4,
+      "wrong": false,
       "conf_mu": 81.7,
       "conf_sd": 6.7,
       "p": 0.4412
@@ -742,11 +833,13 @@
    },
    "near": {
     "p_detect": 0.98,
+    "p_blind": 0.0,
     "judgments": [
      {
       "is_task": true,
       "n": 1,
       "u": 1,
+      "wrong": false,
       "conf_mu": 85.0,
       "conf_sd": 2.0,
       "p": 0.0833
@@ -755,6 +848,7 @@
       "is_task": true,
       "n": 1,
       "u": 3,
+      "wrong": false,
       "conf_mu": 91.2,
       "conf_sd": 4.0,
       "p": 0.3611
@@ -763,6 +857,7 @@
       "is_task": true,
       "n": 1,
       "u": 4,
+      "wrong": false,
       "conf_mu": 93.5,
       "conf_sd": 2.8,
       "p": 0.5556
@@ -775,11 +870,13 @@
   "trash": {
    "far": {
     "p_detect": 0.85,
+    "p_blind": 0.1538,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": true,
       "conf_mu": 79.5,
       "conf_sd": 14.6,
       "p": 0.2564
@@ -788,6 +885,7 @@
       "is_task": true,
       "n": 1,
       "u": 1,
+      "wrong": false,
       "conf_mu": 80.7,
       "conf_sd": 8.6,
       "p": 0.359
@@ -796,6 +894,7 @@
       "is_task": true,
       "n": 1,
       "u": 2,
+      "wrong": false,
       "conf_mu": 77.0,
       "conf_sd": 9.0,
       "p": 0.2564
@@ -804,6 +903,7 @@
       "is_task": true,
       "n": 2,
       "u": 1,
+      "wrong": false,
       "conf_mu": 68.3,
       "conf_sd": 12.5,
       "p": 0.0769
@@ -812,6 +912,7 @@
       "is_task": true,
       "n": 2,
       "u": 2,
+      "wrong": false,
       "conf_mu": 82.5,
       "conf_sd": 7.5,
       "p": 0.0513
@@ -822,11 +923,13 @@
    },
    "near": {
     "p_detect": 0.9549,
+    "p_blind": 0.1538,
     "judgments": [
      {
       "is_task": false,
       "n": 0,
       "u": 0,
+      "wrong": true,
       "conf_mu": 92.8,
       "conf_sd": 6.3,
       "p": 0.2368
@@ -835,6 +938,7 @@
       "is_task": true,
       "n": 1,
       "u": 1,
+      "wrong": false,
       "conf_mu": 92.2,
       "conf_sd": 3.7,
       "p": 0.5263
@@ -843,6 +947,7 @@
       "is_task": true,
       "n": 1,
       "u": 2,
+      "wrong": false,
       "conf_mu": 88.3,
       "conf_sd": 4.7,
       "p": 0.0789
@@ -851,6 +956,7 @@
       "is_task": true,
       "n": 2,
       "u": 1,
+      "wrong": false,
       "conf_mu": 88.3,
       "conf_sd": 4.7,
       "p": 0.1579

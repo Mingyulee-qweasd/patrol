@@ -51,7 +51,7 @@ class Episode:
             self.env.task_cfg["lambda_calib"] = lambda_calib
         self.stream = TaskStream(self.env, rho, seed, horizon_s, warmup_s)
         self.vlm = {rid: VLMSampler(error_model or synthetic_model(kinds_from_env(self.env)),
-                                    seed * 7919 + rid)
+                                    seed * 7919 + rid, world_seed=seed)
                     for rid in range(3)}
         self.mem = {rid: RobotMemory(rid) for rid in range(3)}
         self.trace = Trace()
@@ -86,7 +86,7 @@ class Episode:
             if d > self.env.sense_r:
                 continue
             band = "near" if d <= self.env.reliable_r else "far"
-            j = self.vlm[rid].observe(task.kind, band)
+            j = self.vlm[rid].observe(task.kind, band, oid=task.tid)
             if j is None:
                 continue
             c = self.mem[rid].update(task.xy, j, band, now, task.tid)
@@ -97,8 +97,8 @@ class Episode:
 
     def decide(self, rid: int, c, now: float):
         r = self.robots[rid]
-        if c.committed or r.mode == "detour":
-            return
+        if c.committed or r.mode in ("detour", "wait_site", "working"):
+            return  # 이동·대기·작업 중에는 새 결정으로 이탈 금지
         if not self.arm.use_gate:
             g = "act" if c.s_logodds > 0 else "drop"
         else:
@@ -169,6 +169,21 @@ class Episode:
                 self.wpath[o.rid], self.wcum[o.rid] = paths[o.role]
         self.trace.log(now, "role_swap", rid=r.rid, took=r.role, other=best.rid)
 
+    def _start_work(self, task, rid: int, now: float):
+        """필요 인원 집결 → 처리 작업 개시: n대가 c초 동안 현장에 묶임 (c=0이면 즉시 완료)."""
+        if task.c <= 0:
+            task.t_done = now
+            task.served_by = tuple(task.arrived)
+            self.trace.log(now, "complete", tid=task.tid, rid=rid, tkind=task.kind,
+                           delay=now - task.t_spawn)
+            return
+        task.work_until = now + task.c
+        self.trace.log(now, "work_start", tid=task.tid, crew=tuple(task.arrived), c=task.c)
+        for orid in task.arrived:
+            o = self.robots[orid]
+            o.mode = "working"; o.work_tid = task.tid
+            o.target = None; o.target_cid = -1
+
     def _resume_at_idle(self, rid: int, now: float = 0.0):
         """복귀 지점 = 현 위치 주변(±250m 스윕창)에서 방치 최대 지점 — 순간이동 없이 걸어서 (판단3)."""
         r = self.robots[rid]
@@ -214,7 +229,7 @@ class Episode:
         if task is None or not task.active:
             return
         # 근접 최종 관측 (오류 모델 near 행)
-        j = self.vlm[rid].observe(task.kind, "near")
+        j = self.vlm[rid].observe(task.kind, "near", oid=task.tid)
         if not c.committed:
             # 재관측 방문 — 목적이 개입이 아니라 관측: 기억만 갱신하고 판단 재실행 (개입은
             # 문턱+판단2를 통과해 커밋된 도착만 가능 — 방문이 오개입 경로가 되던 결함 수리)
@@ -233,10 +248,7 @@ class Episode:
         # 진짜 task — 인원 충분?
         task.arrived.add(rid)
         if len(task.arrived) >= task.n:
-            task.t_done = now
-            task.served_by = tuple(task.arrived)
-            self.trace.log(now, "complete", tid=task.tid, rid=rid, tkind=task.kind,
-                           delay=now - task.t_spawn)
+            self._start_work(task, rid, now)
         elif self.coalition.get(c.cid) and len(self.coalition[c.cid]) >= task.n:
             # 배정 조가 오는 중 — 현장 대기 (동료 도착 시 완료, 시한 초과 시 복귀)
             r.mode = "wait_site"; r.target = task.xy.copy(); r.target_cid = c.cid
@@ -331,17 +343,28 @@ class Episode:
                 if r.mode == "patrol" and r.queue:
                     cid, xy, gt = r.queue.pop(0)
                     r.mode = "detour"; r.target = xy; r.target_cid = cid
+                if r.mode == "working":
+                    task = self.tasks_by_id.get(r.work_tid)
+                    if task is None or task.t_done is not None or task.work_until is None:
+                        r.mode = "patrol"; r.work_tid = -1
+                        self._resume_at_idle(rid, now)
+                    elif now >= task.work_until:
+                        task.t_done = now
+                        task.served_by = tuple(task.arrived)
+                        self.trace.log(now, "complete", tid=task.tid, rid=rid,
+                                       tkind=task.kind, delay=now - task.t_spawn)
+                        r.mode = "patrol"; r.work_tid = -1
+                        self._resume_at_idle(rid, now)
+                    continue
                 if r.mode == "wait_site":
                     c = next((x for x in self.mem[rid].items if x.cid == r.target_cid), None)
                     task = self.tasks_by_id.get(c.gt_tid) if c else None
                     if task is not None and task.active:
                         task.arrived.add(rid)
                         if len(task.arrived) >= task.n:
-                            task.t_done = now
-                            task.served_by = tuple(task.arrived)
-                            self.trace.log(now, "complete", tid=task.tid, rid=rid,
-                                           tkind=task.kind, delay=now - task.t_spawn)
-                            r.mode = "patrol"; r.target = None; r.target_cid = -1
+                            self._start_work(task, rid, now)
+                            if r.mode != "working":  # c=0 즉시 완료였으면 순찰 복귀
+                                r.mode = "patrol"; r.target = None; r.target_cid = -1
                         elif now - self.wait_since.get(rid, now) > WAIT_TIMEOUT_S:
                             # 시한 초과 — 배정조가 안 옴 (다른 현장 대기 등 순환 교착 가능성)
                             # → 인원부족 복귀와 동일 처리: 도착 철회, 재안건, 순찰 복귀

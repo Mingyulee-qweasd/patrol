@@ -16,7 +16,8 @@ class Robot:
     sweep_d: float = 0.0      # flanker 전용: 스윕 경로 누적거리
     sweep_dir: int = 1
     # 임무·랑데뷰 상태
-    mode: str = "patrol"      # patrol | detour | to_rdv | wait_rdv | recover
+    mode: str = "patrol"      # patrol | detour | wait_site | working | at_rdv
+    work_tid: int = -1        # working 중인 임무 id
     target: np.ndarray | None = None
     target_cid: int = -1      # detour 대상 후보 id (-1 = 랑데뷰/기타)
     queue: list = field(default_factory=list)   # 배정받은 (cid, xy) 목록

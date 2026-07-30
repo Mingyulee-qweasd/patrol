@@ -42,12 +42,18 @@ def load_rows(path: Path) -> tuple[list[dict], dict]:
 
 
 def build_error_model(rows: list[dict], fails: dict) -> dict:
-    """(category, band)별 판정 경험 분포. 문안 3종은 같은 조건의 반복 표본으로 합산."""
+    """(category, band)별 판정 경험 분포. 문안 3종은 같은 조건의 반복 표본으로 합산.
+
+    오류 분해용 추가 산출: 판정별 wrong 표시(is_task가 GT 부류와 어긋남) +
+    p_blind(같은 이미지의 전 문안이 만장일치로 wrong인 이미지 비율 = 개체 고정 오류 성분).
+    """
     cells = defaultdict(list)
     for r in rows:
-        cells[(r["category"], r["band"])].append(r["judgment"])
+        cells[(r["category"], r["band"])].append((r["file"], r["judgment"]))
     model = {}
-    for (cat, band), js in sorted(cells.items()):
+    for (cat, band), items in sorted(cells.items()):
+        js = [j for _, j in items]
+        want = cat in TASK_CATS
         resp_rate = len(js) / (len(js) + fails.get((cat, band), 0))
         groups = defaultdict(list)  # (is_task, n, u) → conf 목록
         for j in js:
@@ -58,9 +64,15 @@ def build_error_model(rows: list[dict], fails: dict) -> dict:
             mu = sum(confs) / len(confs)
             sd = math.sqrt(sum((c - mu) ** 2 for c in confs) / len(confs)) if len(confs) > 1 else 5.0
             judgments.append({"is_task": is_task, "n": n, "u": u,
+                              "wrong": is_task != want,
                               "conf_mu": round(mu, 1), "conf_sd": round(max(sd, 2.0), 1),
                               "p": round(len(confs) / len(js), 4)})
+        by_file = defaultdict(list)
+        for f, j in items:
+            by_file[f].append(bool(j["is_task"]) != want)
+        blind_files = sum(1 for ws in by_file.values() if all(ws))
         model.setdefault(cat, {})[band] = {"p_detect": round(P_DETECT[band] * resp_rate, 4),
+                                           "p_blind": round(blind_files / len(by_file), 4),
                                            "judgments": judgments, "n_samples": len(js),
                                            "resp_rate": round(resp_rate, 4)}
     return model

@@ -17,6 +17,8 @@ class Task:
     n: int               # GT 필요 대수 (비task는 0)
     u: int               # GT 긴급도
     t_spawn: float
+    c: float = 0.0       # GT 처리 시간 [s] — n대가 동시에 이 시간 동안 붙어야 완료
+    work_until: float | None = None   # 작업 시작 후 완료 예정 시각
     t_found: float | None = None      # 어느 로봇이든 첫 확신 문턱 통과 시각
     t_done: float | None = None
     served_by: tuple = ()
@@ -69,7 +71,7 @@ class TaskStream:
             kind = str(rng.choice(names, p=shares))
             spec = types[kind]
             self.tasks.append(Task(tid, kind, "task", self._rand_xy(rng),
-                                   spec["n"], spec["u"], t))
+                                   spec["n"], spec["u"], t, c=spec.get("c", 0.0)))
             tid += 1
         n_task = len(self.tasks)
 
