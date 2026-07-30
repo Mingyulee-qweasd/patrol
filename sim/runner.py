@@ -42,13 +42,17 @@ class Episode:
     def __init__(self, cfg_path: str, seed: int, horizon_s: float = 10800,
                  warmup_s: float = 1200, rho: float = 0.5,
                  params: Params | None = None, error_model: dict | None = None,
-                 arm: Arm | str = "full", lambda_calib: float | None = None):
+                 arm: Arm | str = "full", lambda_calib: float | None = None,
+                 c_mult: float = 1.0):
         self.arm = ARMS[arm] if isinstance(arm, str) else arm
         self.env = load_env(cfg_path)
         self.p = params or Params()
         self.horizon = horizon_s
         if lambda_calib is not None:  # 부하 스윕용 오버라이드 (yaml 기본값 대체)
             self.env.task_cfg["lambda_calib"] = lambda_calib
+        if c_mult != 1.0:             # 처리 시간 배율 스윕 (조정 가치의 교차점 탐색)
+            for spec in self.env.task_cfg["types"].values():
+                spec["c"] = spec.get("c", 0.0) * c_mult
         self.stream = TaskStream(self.env, rho, seed, horizon_s, warmup_s)
         self.vlm = {rid: VLMSampler(error_model or synthetic_model(kinds_from_env(self.env)),
                                     seed * 7919 + rid, world_seed=seed)
