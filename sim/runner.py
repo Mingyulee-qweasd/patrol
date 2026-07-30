@@ -19,6 +19,7 @@ from .arms import Arm, ARMS
 
 ARRIVE_R = 3.0     # 도착 판정 반경
 MEET_R = 10.0      # 랑데뷰 집결 판정 반경
+COMM_R = 30.0      # 근접 통신 반경 [m] — 조우 조정의 물리 전제 (근거리 무선 보수 추정)
 WAIT_TIMEOUT_S = 1800.0  # 현장 대기 시한 (끝→끝 이동 ~1000s + 앞 작업 최대 600s + 여유) — 교착 방지
 
 
@@ -78,6 +79,7 @@ class Episode:
         self.d0_s = d0_s
         self.coalition = {}   # cid -> {"xy", "crew": set 배정, "arrived": set}
         self.wait_since = {}  # rid -> wait_site 진입 시각 (교착 방지 시한용)
+        self.enc_active = {}  # (a,b) -> 조우 중 여부 (조우당 협의 1회)
         self.snaps = []       # 동작 확인 동영상용 장면 기록
         self.idle_map = IdlenessMap(self.env)
         self.tasks_by_id = {x.tid: x for x in self.stream.tasks}
@@ -119,6 +121,10 @@ class Episode:
             decision = "now"   # 반응식: n̂ 무시하고 혼자 출동 (부족하면 현장에서 판명)
         elif not self.arm.use_agenda and c.n_hat >= 2:
             decision = "skip"  # solo-only: 다수 임무는 다룰 수단 없음
+        elif self.arm.encounter_coord and c.near_confirmed and c.n_hat >= 2:
+            c.agenda = True
+            decision = "now"  # 조우 약속이 생기기 전까진 반응식처럼 재시도 (겹침 채널 유지)
+                              # — 조우가 나면 2자 약속이 이 후보를 선점(committed)
         else:
             decision = dispatch(c, r.xy, r.v, t_to_rdv, can_return, self.p)
             if decision == "agenda" and not c.near_confirmed:
@@ -265,7 +271,7 @@ class Episode:
         task.arrived.add(rid)
         if len(task.arrived) >= task.n:
             self._start_work(task, rid, now)
-        elif self.coalition.get(c.cid) and len(self.coalition[c.cid]) >= c.n_hat:
+        elif self.coalition.get(c.cid) and len(self.coalition[c.cid]) >= min(c.n_hat, 2):
             # 배정 조가 오는 중 (자기 추정 기준) — 현장 대기 (동료 도착 시 완료, 시한 초과 시 복귀)
             r.mode = "wait_site"; r.target = task.xy.copy(); r.target_cid = c.cid
             self.wait_since[rid] = now
@@ -277,6 +283,44 @@ class Episode:
             task.arrived.discard(rid)
             c.committed = False; c.agenda = True
             self.trace.log(now, "bounce", rid=rid, tid=task.tid, need=task.n)
+
+    def _encounter(self, a: int, b: int, now: float):
+        """자연 조우: 수첩 병합 + 즉석 2자 협의 — 집결 이동 0의 조정 (프레임 C 제안 시스템).
+
+        협의 = 병합된 시야에서 근접 확정된 여럿-임무 중 (긴급 우선, 그다음 가까운 것) 하나를
+        골라 둘이 함께 출동 약속. n̂=3의 셋째는 후속 조우·현장 대기 시한이 안전망."""
+        self.mem[a].merge_from(self.mem[b])
+        self.mem[b].merge_from(self.mem[a])
+        self.trace.log(now, "encounter", pair=(a, b))
+        ra, rb = self.robots[a], self.robots[b]
+        if ra.mode != "patrol" or rb.mode != "patrol":
+            return  # 둘 다 손이 비어 있을 때만 즉석 약속
+        mid = (ra.xy + rb.xy) / 2
+        best, best_key = None, None
+        for c in self.mem[a].items:
+            if c.committed or not c.near_confirmed or c.n_hat < 2:
+                continue
+            if gate(c, self.p) != "act":
+                continue
+            task = self.tasks_by_id.get(c.gt_tid)
+            if task is None or not task.active:
+                continue
+            key = (-c.u_hat, float(np.linalg.norm(c.xy - mid)))
+            if best is None or key < best_key:
+                best, best_key = c, key
+        if best is None:
+            return
+        cb = next((x for x in self.mem[b].items
+                   if np.linalg.norm(x.xy - best.xy) < MATCH_RADIUS), None)
+        best.committed = True
+        self.coalition[best.cid] = {a, b}
+        if cb is not None:
+            cb.committed = True
+            self.coalition[cb.cid] = {a, b}
+        for rid, c_own in ((a, best), (b, cb or best)):
+            r = self.robots[rid]
+            r.mode = "detour"; r.target = best.xy.copy(); r.target_cid = c_own.cid
+        self.trace.log(now, "pair_assign", pair=(a, b), tid=best.gt_tid, n_hat=best.n_hat)
 
     def _assign_virtual(self, now: float):
         """broadcast 상한선: 만남 없이 안건 즉시 배정."""
@@ -344,7 +388,8 @@ class Episode:
         now = 0.0
         while now < self.horizon:
             now += 1.0
-            due = (not self.arm.broadcast) and self.rdv.is_due(now)
+            due = (not self.arm.broadcast and not self.arm.encounter_coord) \
+                  and self.rdv.is_due(now)
             meet_xy = self.rdv.meet_point_xy()
             for rid, r in self.robots.items():
                 # 재관측 예약 들르기 (경로 자율성 — 판단3의 일부)
@@ -400,6 +445,7 @@ class Episode:
                     if r.move_towards(r.target):
                         self.on_arrival(rid, r.target_cid, now)
                 elif (r.mode != "at_rdv" and not self.arm.broadcast
+                      and not self.arm.encounter_coord
                       and self.rdv.next is not None
                       and np.linalg.norm(r.xy - meet_xy) / r.v > (self.rdv.next.t - now) + 5.0):
                     # 집결 리드타임: 정상 순찰 흐름으로는 약속에 지각할 로봇만 조기 직행
@@ -442,6 +488,13 @@ class Episode:
                         if a != b:
                             self.mem[a].merge_from(self.mem[b])
                 self._assign_virtual(now)  # 즉시 배정 (물리 회합·이벤트 오염 없음)
+            if self.arm.encounter_coord:
+                for a in range(3):
+                    for b in range(a + 1, 3):
+                        near = float(np.linalg.norm(self.robots[a].xy - self.robots[b].xy)) < COMM_R
+                        if near and not self.enc_active.get((a, b)):
+                            self._encounter(a, b, now)  # 조우당 1회 협의
+                        self.enc_active[(a, b)] = near
             # 전원 집결 → 의사일정; 유예 초과 시 부분 회의 (판단2 복귀 추정이 빗나간 경우의 안전망)
             if due:
                 present = [rid for rid, r in self.robots.items()
