@@ -41,11 +41,6 @@ class RendezvousManager:
     def grace_expired(self, now: float) -> bool:
         return self.next is not None and now >= self.next.t + self.grace
 
-    def rail_recovery_target(self, now: float, hub_s: float, hub_dir: int,
-                             from_xy: np.ndarray, v: float):
-        """약속 놓친 로봇: 예측 가능한 허브 궤적을 따라 요격점 계산."""
-        return intercept_hub(self.env.route, hub_s, self.env.hub_v, hub_dir,
-                             from_xy, v, self.env.lap_len)
 
 
 def convoke_intercept(env, hub_s: float, hub_dir: int, finder_xy: np.ndarray,

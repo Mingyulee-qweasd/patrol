@@ -58,7 +58,7 @@ def next_interval(agenda: list[Candidate], d0: float, theta_v: float = 4.0) -> f
     if V > theta_v:
         return 0.5 * d0
     if V == 0:
-        return min(2.0 * d0, 1.5 * d0)  # 안건 없으면 연장 (상한 내)
+        return 1.5 * d0  # 안건 없으면 온건 연장 — 설계 범위 [0.5, 2]d0 내 (이력 없는 단발 규칙이라 상한식 불필요)
     return d0
 
 

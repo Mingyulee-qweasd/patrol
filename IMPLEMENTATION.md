@@ -112,7 +112,11 @@
 - ~~metrics.py~~ ✅ / ~~λ 재보정~~ ✅ (0.25×) / arms 1~7 ✅ (role-adaptive만 잔여)
 - metrics.py: idleness 식1~5(정상상태 집계)·GT-u 가중 지연·오개입 TPR/FPR·인원부족 복귀률·소집 발화율·백로그
 - arms.py: full / no-sizing / fixed-rdv(TTC·ETC) / no-gate / solo-only / broadcast / greedy-reactive / role-adaptive
-- λ 재보정 (metrics 실측 기반), tests/ (기하·경매·추첨 분포·해석 검증 ±5%), exp/run_all.py + stats.py
+- ~~tests/~~ ✅ **63개 통과** (기하 17·경매 16·추첨 분포 24·해석 검증 6 — 해석 검증: 방치 이론식 대비 0.07%)
+- 정리: next_interval 죽은 상한식 제거 / tasks λ=0·hazard 0 가드 / hub_pos_at lap 인자 실사용 /
+  rail_recovery_target 삭제 (방치 우선 복귀가 대체 — 설계 §9 기록)
+- 알려진 단순화: 경매 bid의 공백 항이 이동시간 비례 근사라 낙찰 순위에 w_idle 무영향 (판단2에서만 유효)
+- exp/run_all.py + stats.py, role-adaptive arm, λ 재점검(실측 표 기준·D6)
 - ~~measure.py~~ ✅ (검증 통과, error_model.json 시뮬 주입 스모크 3 arm 통과)
 - GT 정비 6건 사용자 검수 대기 (images/review/gt_audit_sheet.jpg) → 재채점 (판정 재사용, 수 초)
 - W2 스윕 축 추가: obstacle far 탐지율 30~90% 민감도 (검증단 조건)
@@ -137,6 +141,9 @@
 | 14 | 확신 로그오즈 exp 넘침 | 무한 누적 | ±30 클립 |
 | 15 | load_model이 래퍼째 반환 → 샘플러 KeyError | error_model.json이 {stats,model} 래퍼 | 'model' 키 자동 언랩 (검증단 적발) |
 | 16 | 실측 n̂=4("beyond")가 3대 편대에 미정의 | 스키마엔 있으나 정책 미처리 | 샘플러에서 min(n,3) 상한 (검증단 적발) |
+| 17 | broadcast 완료율 14% 붕괴 + 로그오즈 오버플로 | **병합 메아리**: 매초 병합이 상대 총점 절반을 무조건 덧셈 → 같은 증거 초당 재계상 폭주 (랑데뷰 병합도 동일 결함) | 자기 관측분만 교환 + 같은 상대 기여는 교체(재병합 무효과) — full도 33→52% 회복 |
+| 18 | 병합 신설 후보의 채점 연결 끊김+소집 차단 | Candidate 자리 인자 실수 — gt_tid가 convoked 칸에 | 키워드 인자 (17 수리 중 발견) |
+| 19 | 유예·부분 회의 안전망 미배선 | grace_expired 선언만 되고 호출 없음 — 1대가 늦으면 전원 무한 대기 | due+유예 초과 시 2대 이상이면 부분 회의, 미만이면 회의 무산+재예약 (테스트 요원 적발) |
 
 ## 5. 진행 확인 방법
 

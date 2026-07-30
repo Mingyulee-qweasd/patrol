@@ -94,8 +94,8 @@ def hub_pos_at(s0: float, v: float, direction: int, dt: float,
     """왕복형/루프형 허브의 dt초 후 호길이 위치."""
     if route.loop:
         return (s0 + direction * v * dt) % route.length
-    # 왕복: 반사 경계
+    # 왕복: 반사 경계 (주기 = lap, 통상 2×노선 길이)
     x = s0 + direction * v * dt
-    period = 2 * route.length
+    period = lap if lap else 2 * route.length
     x = x % period
     return x if x <= route.length else period - x

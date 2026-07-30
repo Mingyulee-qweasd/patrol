@@ -222,15 +222,16 @@ class Episode:
             self.trace.log(now, "assign", cid=c.cid, crew=crew, n_hat=c.n_hat)
 
     # ── 랑데뷰 의사일정 ──────────────────────────────────────────
-    def hold_meeting(self, now: float):
-        # 병합 (전원 ↔ 전원)
-        for a in range(3):
-            for b in range(3):
+    def hold_meeting(self, now: float, present: list | None = None):
+        present = sorted(present) if present is not None else [0, 1, 2]
+        # 병합 (참석자 ↔ 참석자)
+        for a in present:
+            for b in present:
                 if a != b:
                     self.mem[a].merge_from(self.mem[b])
         # 재판정 + 안건 수집
         agenda = []
-        for c in self.mem[0].items:  # 병합 후 허브 메모리 = 팀 뷰
+        for c in self.mem[present[0]].items:  # 병합 후 선임 참석자 메모리 = 팀 뷰
             if c.committed:
                 continue
             task = self.tasks_by_id.get(c.gt_tid)
@@ -241,7 +242,7 @@ class Episode:
         # 경매 배정
         if not self.arm.use_agenda:
             agenda = []
-        assign = auction(agenda, {rid: r.xy for rid, r in self.robots.items()},
+        assign = auction(agenda, {rid: self.robots[rid].xy for rid in present},
                          self.env.v_sweep, self.p)
         for c in agenda:
             crew = assign.get(c.cid, [])
@@ -332,15 +333,30 @@ class Episode:
                         if a != b:
                             self.mem[a].merge_from(self.mem[b])
                 self._assign_virtual(now)  # 즉시 배정 (물리 회합·이벤트 오염 없음)
-            # 전원 집결 → 의사일정
-            if due and all(np.linalg.norm(r.xy - meet_xy) < MEET_R or r.mode == "at_rdv"
-                           for r in self.robots.values()):
-                self.hold_meeting(now)
-                for r in self.robots.values():
-                    if r.mode == "at_rdv":
-                        r.mode = "patrol"
-                        if r.role != "hub":
-                            r.sweep_d = nearest_sweep_d(self.wpath[r.rid], self.wcum[r.rid], r.xy)
-                        else:
-                            r.hub_s = self.env.route.project(r.xy)
+            # 전원 집결 → 의사일정; 유예 초과 시 부분 회의 (판단2 복귀 추정이 빗나간 경우의 안전망)
+            if due:
+                present = [rid for rid, r in self.robots.items()
+                           if np.linalg.norm(r.xy - meet_xy) < MEET_R or r.mode == "at_rdv"]
+                concluded = False
+                if len(present) == 3:
+                    self.hold_meeting(now)
+                    concluded = True
+                elif self.rdv.grace_expired(now):
+                    if len(present) >= 2:
+                        self.hold_meeting(now, present=present)
+                        self.trace.log(now, "rdv_partial", present=tuple(present))
+                    else:  # 0~1대: 회의 무산 — 다음 만남만 예약 (기억 병합 없음)
+                        self.rdv.schedule(now, self.robots[0].hub_s,
+                                          self.robots[0].hub_dir, self.d0_s)
+                        self.trace.log(now, "rdv_skipped", present=tuple(present))
+                    concluded = True
+                if concluded:
+                    for rid in present:
+                        r = self.robots[rid]
+                        if r.mode == "at_rdv":
+                            r.mode = "patrol"
+                            if r.role != "hub":
+                                r.sweep_d = nearest_sweep_d(self.wpath[r.rid], self.wcum[r.rid], r.xy)
+                            else:
+                                r.hub_s = self.env.route.project(r.xy)
         return self.trace

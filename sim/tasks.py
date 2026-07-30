@@ -61,7 +61,7 @@ class TaskStream:
 
         self.tasks: list[Task] = []
         tid = 0
-        t = warmup_s  # 안정화 이후에만 주입 (York 관행)
+        t = warmup_s if lam > 0 else horizon_s  # λ=0 → 임무 없는 세계 (0 나눗셈 가드)
         while t < horizon_s:
             t += rng.exponential(1.0 / lam)
             if t >= horizon_s:
@@ -75,7 +75,8 @@ class TaskStream:
 
         # 비개입 개체: 애매(=task 총량 × ratio), 위험물(hazard_share)
         n_amb = int(n_task * env.task_cfg.get("nontask_ratio", 0.5))
-        n_haz = max(1, int(n_task * env.task_cfg.get("hazard_share", 0.05)))
+        haz_share = env.task_cfg.get("hazard_share", 0.05)
+        n_haz = max(1, int(n_task * haz_share)) if haz_share > 0 and n_task > 0 else 0
         for _ in range(n_amb):
             ts = warmup_s + rng.uniform(0, horizon_s - warmup_s)
             self.tasks.append(Task(tid, "ambiguous", "nontask",

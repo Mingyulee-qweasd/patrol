@@ -30,6 +30,7 @@ class Candidate:
     convoked: bool = False         # 조기 소집 1회 발화 플래그
     reobs_visits: int = 0          # 재관측 전용 방문 횟수 (상한 2)
     gt_tid: int = -1               # 채점용 (정책은 안 봄)
+    peer_contrib: dict = field(default_factory=dict)  # rid → 반영된 동료 자기관측분(×0.5) — 재병합 무효과용
 
     @property
     def s(self) -> float:
@@ -69,22 +70,33 @@ class RobotMemory:
         return c
 
     def merge_from(self, other: "RobotMemory"):
-        """랑데뷰 병합 — 독립 목격의 확신 합산 (교차 확인 효과)."""
+        """랑데뷰 병합 — 독립 목격의 확신 합산 (교차 확인 효과).
+
+        메아리 방지: 상대의 **자기 관측분**(총점 − 상대가 남에게서 받은 몫)만 ×0.5로 반영하고,
+        같은 상대의 기여는 덧셈이 아니라 **최신값으로 교체** — 같은 쌍을 몇 번이고 병합해도
+        (broadcast는 매초) 결과가 불변. 종전의 무조건 덧셈은 초당 재계상 폭주를 일으켰음 (일지 #17).
+        """
         for oc in other.items:
+            oc_own = oc.s_logodds - sum(oc.peer_contrib.values())  # 상대의 자기 관측분
             matched = False
             for c in self.items:
                 if np.linalg.norm(c.xy - oc.xy) < MATCH_RADIUS:
                     if oc.cid != c.cid or other.rid != self.rid:
-                        c.s_logodds += oc.s_logodds * 0.5  # 이중 계상 완화 절충
+                        prev = c.peer_contrib.get(other.rid, 0.0)
+                        new = 0.5 * oc_own
+                        c.s_logodds = float(np.clip(c.s_logodds - prev + new, -30, 30))
+                        c.peer_contrib[other.rid] = new
                         c.near_confirmed |= oc.near_confirmed
                         c.committed |= oc.committed
                         c.last_seen = max(c.last_seen, oc.last_seen)
                     matched = True
                     break
             if not matched:
-                self.items.append(Candidate(self._next, oc.xy.copy(), oc.s_logodds,
-                                            oc.n_hat, oc.u_hat, oc.first_seen,
-                                            oc.last_seen, oc.near_confirmed,
-                                            oc.committed, oc.agenda, oc.reobserve,
-                                            oc.gt_tid))
+                nc = Candidate(self._next, oc.xy.copy(), float(np.clip(0.5 * oc_own, -30, 30)),
+                               oc.n_hat, oc.u_hat, oc.first_seen,
+                               oc.last_seen, oc.near_confirmed,
+                               oc.committed, oc.agenda, oc.reobserve,
+                               gt_tid=oc.gt_tid)
+                nc.peer_contrib[other.rid] = 0.5 * oc_own
+                self.items.append(nc)
                 self._next += 1
