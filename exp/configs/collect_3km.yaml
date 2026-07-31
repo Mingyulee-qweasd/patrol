@@ -1,0 +1,41 @@
+# 환경: 직선형 (규칙 코드는 환경 불변 — 이 파일이 환경의 전부)
+name: collect
+route:                 # 메인 경로 폴리라인 (m), 왕복형
+  points: [[0, 0], [3000, 0]]
+  loop: false          # false = 끝에서 되돌아오는 왕복
+corridors:
+  left:  {width: 40}   # 노선 기준 +y 방향 폭 (v1: 구간 균일; park.yaml은 다각형)
+  right: {width: 40}
+robots:
+  speed_mps: 1.0       # 측면 스윕 속도 (허브 속도는 동기화 공식으로 유도)
+  sense_radius_m: 15
+  reliable_radius_m: 8 # 관측 품질 기준 (이 안이어야 idleness 리셋·근접 판정)
+patrol:
+  cell_m: 10           # idleness 셀 크기
+  sweep_spacing_m: 25  # 스윕 톱니 간격 (≤ 2×sense_radius 보장 커버)
+rendezvous:
+  meet_eps_s: 30       # 만남 소요 ε
+  grace_frac: 0.1      # 유예 = 0.1 × 간격
+tasks:
+  rho_target: 0.5      # 명목 목표 (공식 유도의 입력)
+  lambda_calib: 0.25   # 경험 보정 계수 (07-29 스윕: 공식이 발견 병목을 몰라 4배 과대) — 실효 λ ≈ 14건/h
+  # 온톨로지 ④안: 타입, 필요 n, 긴급도 u, 발생 비중 (물리 임무), 비개입은 별도
+  # sharps·carcass_s = "급한 1인 임무" (n-u 상관 해소), hazard = 전선·화학류만 (개입 금지)
+  types:
+    # carry: portable=소형 수거(용량 소비) / loadable=소형2 상차 대기+대형 수취 / clear=치우기
+    trash:     {n: 1, u: 1, share: 0.35, c: 60,  carry: portable}
+    sharps:    {n: 1, u: 3, share: 0.15, c: 90,  carry: portable}
+    carcass_s: {n: 1, u: 3, share: 0.20, c: 120, carry: portable}
+    carcass_l: {n: 2, u: 3, share: 0.05, c: 300, carry: loadable}   # 들어올림 c 후 적재 대기
+    bulky:     {n: 2, u: 2, share: 0.20, c: 420, carry: loadable}
+    obstacle:  {n: 3, u: 4, share: 0.05, c: 600, carry: clear, road_adjacent: true}  # 도로 막는 나무
+  nontask_ratio: 0.5   # 애매 사례 = 물리 임무 총량의 50%
+  hazard_share: 0.05   # 위험물 (개입 금지)
+
+# ── v2 이종 수거 팀 파라미터 (설계 §12 확정) ─────────────────
+collect:
+  small_capacity: 5     # 소형 적재 한도 (portable 개수)
+  dump_s: 30            # 하역 소요 (대형 접촉 3m)
+  load_s: 60            # 상차 소요 (loadable, 소형2+대형)
+  truck_v: 1.5          # 대형 도로 주행 속도 [m/s]
+  truck_arm_r: 8        # 대형 자가 수거 팔 범위 (도로변) [m]
