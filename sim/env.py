@@ -24,6 +24,7 @@ class Env:
     sweep_paths: dict = field(default_factory=dict)   # side -> (s,t) waypoints
     hub_v: float = 0.0
     lap_len: float = 0.0
+    collect: dict = field(default_factory=dict)       # v2 이종 수거 파라미터 (없으면 v1 동작)
 
     @property
     def lap_time(self) -> float:
@@ -45,6 +46,7 @@ def load_env(path: str | Path) -> Env:
         meet_eps=cfg["rendezvous"]["meet_eps_s"],
         grace_frac=cfg["rendezvous"]["grace_frac"],
         task_cfg=cfg["tasks"],
+        collect=cfg.get("collect", {}),
     )
     lens = {}
     for side, w in e.corridor_width.items():

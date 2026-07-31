@@ -19,6 +19,8 @@ class Task:
     t_spawn: float
     c: float = 0.0       # GT 처리 시간 [s] — n대가 동시에 이 시간 동안 붙어야 완료
     work_until: float | None = None   # 작업 시작 후 완료 예정 시각
+    carry: str = "portable"           # portable(소형 수거) | loadable(상차 대기→대형) | clear(치우기)
+    staged_at: float | None = None    # loadable: 소형 2가 들어올려 적재 대기 시작한 시각
     t_found: float | None = None      # 어느 로봇이든 첫 확신 문턱 통과 시각
     t_done: float | None = None
     served_by: tuple = ()
@@ -70,8 +72,10 @@ class TaskStream:
                 break
             kind = str(rng.choice(names, p=shares))
             spec = types[kind]
-            self.tasks.append(Task(tid, kind, "task", self._rand_xy(rng),
-                                   spec["n"], spec["u"], t, c=spec.get("c", 0.0)))
+            self.tasks.append(Task(tid, kind, "task",
+                                   self._rand_xy(rng, road=spec.get("road_adjacent", False)),
+                                   spec["n"], spec["u"], t, c=spec.get("c", 0.0),
+                                   carry=spec.get("carry", "portable")))
             tid += 1
         n_task = len(self.tasks)
 
@@ -90,10 +94,10 @@ class TaskStream:
         self.tasks.sort(key=lambda x: x.t_spawn)
         self.lam = lam
 
-    def _rand_xy(self, rng) -> np.ndarray:
+    def _rand_xy(self, rng, road: bool = False) -> np.ndarray:
         s = rng.uniform(0, self.env.route.length)
         side = rng.choice(["left", "right"])
-        w = self.env.corridor_width[side]
+        w = 8.0 if road else self.env.corridor_width[side]  # 도로 인접형(예: 길 막는 나무)은 도로변
         t_off = rng.uniform(2.0, w) * (1 if side == "left" else -1)
         return self.env.route.frame_to_world(s, t_off)
 

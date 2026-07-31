@@ -73,6 +73,15 @@ class Episode:
             self.wpath[rid] = pts
             self.wcum[rid] = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(pts, axis=0), axis=1))])
 
+        # v2 이종 수거: env.collect 존재 시 — 로봇0 = 대형 집하(레일·자가수거), 1·2 = 소형(용량)
+        self.v2 = bool(self.env.collect)
+        if self.v2:
+            self.cap = int(self.env.collect.get("small_capacity", 5))
+            self.dump_s = float(self.env.collect.get("dump_s", 30))
+            self.load_s = float(self.env.collect.get("load_s", 60))
+            self.arm_r = float(self.env.collect.get("truck_arm_r", 8))
+            self.env.hub_v = float(self.env.collect.get("truck_v", 1.5))  # 대형은 자체 속도
+            self.robots[0].v = self.env.hub_v
         # 대형 비교: "rail"(현행: 가운데 직선) vs "three_sweep"(전원 톱니 — 폭 3분할)
         self.three_sweep = (formation == "three_sweep")
         if self.three_sweep:
@@ -98,6 +107,7 @@ class Episode:
         self.coalition = {}   # cid -> {"xy", "crew": set 배정, "arrived": set}
         self.wait_since = {}  # rid -> wait_site 진입 시각 (교착 방지 시한용)
         self.enc_active = {}  # (a,b) -> 조우 중 여부 (조우당 협의 1회)
+        self._dump_until = {}  # rid -> 하역 완료 시각 (v2)
         self.snaps = []       # 동작 확인 동영상용 장면 기록
         self.idle_map = IdlenessMap(self.env)
         self.tasks_by_id = {x.tid: x for x in self.stream.tasks}
@@ -121,8 +131,15 @@ class Episode:
 
     def decide(self, rid: int, c, now: float):
         r = self.robots[rid]
-        if c.committed or r.mode in ("detour", "wait_site", "working"):
+        if c.committed or r.mode in ("detour", "wait_site", "working", "dumping", "staged_wait"):
             return  # 이동·대기·작업 중에는 새 결정으로 이탈 금지
+        if self.v2:
+            if rid == 0:
+                return  # 대형은 자체 정책 (레일+자가수거+상차 대응) — decide 미사용
+            task = self.tasks_by_id.get(c.gt_tid)
+            if (task is not None and task.carry == "portable"
+                    and r.cargo >= self.cap):
+                return  # 만적 — 새 수거 불가 (판단6이 하역을 유도)
         if not self.arm.use_gate:
             g = "act" if c.s_logodds > 0 else "drop"
         else:
@@ -201,8 +218,33 @@ class Episode:
                 self.wpath[o.rid], self.wcum[o.rid] = paths[o.role]
         self.trace.log(now, "role_swap", rid=r.rid, took=r.role, other=best.rid)
 
+    def _finish_semantics(self, task, now: float):
+        """v2: 작업 c 완료가 곧 임무 종료가 아닌 경우 처리. True = 종료 지연(적재 대기)."""
+        if not self.v2:
+            return False
+        if task.carry == "portable":
+            for orid in task.arrived:
+                if orid != 0:
+                    self.robots[orid].cargo += 1  # 소형이 실음 (대형 자가수거는 무제한 통)
+            return False
+        if task.carry == "loadable" and task.staged_at is None:
+            # 소형 2가 들어올려 도로변에 둠 → 둘 다 현장에서 대형을 기다림 (전용 모드)
+            task.staged_at = now
+            task.xy = self.env.route.point_at(self.env.route.project(task.xy))
+            for orid in list(task.arrived):
+                if orid != 0:
+                    o = self.robots[orid]
+                    o.mode = "staged_wait"; o.work_tid = task.tid
+                    o.xy = task.xy.copy()  # 함께 도로변으로 끌고 온 것
+                    self.wait_since[orid] = now
+            self.trace.log(now, "staged", tid=task.tid)
+            return True
+        return False
+
     def _start_work(self, task, rid: int, now: float):
         """필요 인원 집결 → 처리 작업 개시: n대가 c초 동안 현장에 묶임 (c=0이면 즉시 완료)."""
+        if self.v2 and task.carry == "loadable" and task.staged_at is not None:
+            return  # 이미 들어올려 적재 대기 중 — 대형 상차만 남음 (재작업 금지)
         if task.c <= 0:
             task.t_done = now
             task.served_by = tuple(task.arrived)
@@ -310,6 +352,8 @@ class Episode:
         self.mem[a].merge_from(self.mem[b])
         self.mem[b].merge_from(self.mem[a])
         self.trace.log(now, "encounter", pair=(a, b))
+        if self.v2 and 0 in (a, b):
+            return  # 대형은 레일 전용 — 조우는 정보 전파만 (상차·하역은 물류 틱이 담당)
         ra, rb = self.robots[a], self.robots[b]
         # ① 합류: 한쪽이 여럿-임무로 가는 중이거나 현장에서 대기 중이면 파트너가 동행
         #    (대기 로봇 옆을 지나는 순찰 로봇이 통신 반경에 들어온 것도 조우)
@@ -361,6 +405,80 @@ class Episode:
             r = self.robots[rid]
             r.mode = "detour"; r.target = best.xy.copy(); r.target_cid = c_own.cid
         self.trace.log(now, "pair_assign", pair=(a, b), tid=best.gt_tid, n_hat=best.n_hat)
+
+    def _v2_logistics(self, now: float):
+        """v2 물류 틱: 판단6(소형 비우기) + 접촉 하역 + 대형 정책(상차 우선) + 상차 완료."""
+        truck = self.robots[0]
+        # ── 접촉 하역: 소형이 대형 3m 이내 + 짐 있음 + 둘 다 가능 상태 → 30s 하역
+        for rid in (1, 2):
+            r = self.robots[rid]
+            if (r.cargo > 0 and r.mode in ("patrol", "detour")
+                    and truck.mode in ("patrol", "dumping")
+                    and float(np.linalg.norm(r.xy - truck.xy)) < 3.0):
+                r.mode = "dumping"; r.work_tid = -1
+                truck.mode = "dumping"
+                self._dump_until[rid] = now + self.dump_s
+                self.trace.log(now, "dump_start", rid=rid, cargo=r.cargo)
+        for rid in (1, 2):
+            r = self.robots[rid]
+            if r.mode == "dumping" and now >= self._dump_until.get(rid, 0):
+                self.trace.log(now, "dump_done", rid=rid, cargo=r.cargo)
+                r.cargo = 0
+                r.mode = "patrol"
+                if all(self.robots[o].mode != "dumping" for o in (1, 2)):
+                    truck.mode = "patrol"
+                self._resume_at_idle(rid, now)
+        # ── 판단6: 잔량 80% 이상이면 대형에게 비우러 감 (대형은 레일 위 — 직행)
+        for rid in (1, 2):
+            r = self.robots[rid]
+            if r.mode == "patrol" and r.cargo >= max(2, int(0.8 * self.cap)):
+                r.mode = "detour"; r.target = truck.xy.copy(); r.target_cid = -3
+                self.trace.log(now, "empty_run", rid=rid, cargo=r.cargo)
+        for rid in (1, 2):
+            r = self.robots[rid]
+            if r.mode == "detour" and r.target_cid == -3:
+                r.target = truck.xy.copy()  # 움직이는 대형 추적
+                if r.move_towards(r.target):
+                    pass  # 접촉 하역 블록이 3m에서 잡음
+        # ── 대형 정책: 적재 대기(staged) 지점 우선, 없으면 레일 순찰(+자가 수거)
+        staged = [t for t in self.tasks_by_id.values()
+                  if t.active and t.staged_at is not None and t.carry == "loadable"
+                  and self._truck_knows(t)]
+        if truck.mode == "patrol":
+            if staged:
+                tgt = min(staged, key=lambda t: abs(self.env.route.project(t.xy) - truck.hub_s))
+                s_t = self.env.route.project(tgt.xy)
+                if abs(s_t - truck.hub_s) > self.arm_r:
+                    truck.hub_dir = 1 if s_t > truck.hub_s else -1  # 방향만 — 이동은 본 루프
+                else:
+                    # 상차: 소형 2 대기 중이어야 (사용자 확정 의미론)
+                    waiters = [o for o in (1, 2)
+                               if self.robots[o].mode == "staged_wait"
+                               and self.robots[o].work_tid == tgt.tid]
+                    if len(waiters) >= 2:
+                        tgt.work_until = now + self.load_s
+                        tgt.arrived |= {0, 1, 2}
+                        truck.mode = "working"; truck.work_tid = tgt.tid
+                        for o in waiters:
+                            self.robots[o].mode = "working"
+                            self.robots[o].work_tid = tgt.tid
+                        self.trace.log(now, "load_start", tid=tgt.tid)
+        # ── 대형 자가 수거: 팔 범위 내 portable 임무 (근접 판정 후 작업)
+        if truck.mode == "patrol":
+            for t in self.stream.spawned(now):
+                if (t.active and t.carry == "portable" and t.work_until is None
+                        and float(np.linalg.norm(t.xy - truck.xy)) < self.arm_r):
+                    j = self.vlm[0].observe(t.kind, "near", oid=t.tid)
+                    if j is not None and j["is_task"]:
+                        t.work_until = now + t.c
+                        t.arrived.add(0)
+                        truck.mode = "working"; truck.work_tid = t.tid
+                        self.trace.log(now, "truck_pickup", tid=t.tid)
+                    break
+
+    def _truck_knows(self, task) -> bool:
+        """대형이 적재 대기를 아는가 = 자기 기억에 그 후보가 있고 근접 확인됨 (병합으로 전파)."""
+        return any(c.gt_tid == task.tid and c.near_confirmed for c in self.mem[0].items)
 
     def _assign_virtual(self, now: float):
         """broadcast 상한선: 만남 없이 안건 즉시 배정."""
@@ -453,11 +571,26 @@ class Episode:
                         r.mode = "patrol"; r.work_tid = -1
                         self._resume_at_idle(rid, now)
                     elif now >= task.work_until:
-                        task.t_done = now
-                        task.served_by = tuple(task.arrived)
-                        self.trace.log(now, "complete", tid=task.tid, rid=rid,
-                                       tkind=task.kind, delay=now - task.t_spawn)
+                        if self._finish_semantics(task, now):
+                            task.work_until = None  # 전환은 semantics가 두 소형 모두 처리
+                        else:
+                            task.t_done = now
+                            task.served_by = tuple(task.arrived)
+                            self.trace.log(now, "complete", tid=task.tid, rid=rid,
+                                           tkind=task.kind, delay=now - task.t_spawn)
+                            r.mode = "patrol"; r.work_tid = -1
+                            self._resume_at_idle(rid, now)
+                    continue
+                if r.mode == "staged_wait":
+                    task = self.tasks_by_id.get(r.work_tid)
+                    if task is None or task.t_done is not None:
                         r.mode = "patrol"; r.work_tid = -1
+                        self._resume_at_idle(rid, now)
+                    elif now - self.wait_since.get(rid, now) > WAIT_TIMEOUT_S:
+                        task.staged_at = None  # 내려놓고 철수 — 재적재 필요
+                        task.arrived.discard(rid)
+                        r.mode = "patrol"; r.work_tid = -1
+                        self.trace.log(now, "stage_timeout", rid=rid, tid=task.tid)
                         self._resume_at_idle(rid, now)
                     continue
                 if r.mode == "wait_site":
@@ -476,6 +609,8 @@ class Episode:
                             if c.cid in self.coalition:
                                 self.coalition[c.cid].discard(rid)
                             c.n_hat = task.n; c.committed = False; c.agenda = True
+                            if self.v2 and task.carry == "loadable":
+                                task.staged_at = None  # 들어올린 것 내려놓고 철수 — 재적재 필요
                             r.mode = "patrol"; r.target = None; r.target_cid = -1
                             self.trace.log(now, "wait_timeout", rid=rid, tid=task.tid)
                             self._resume_at_idle(rid, now)
@@ -537,6 +672,8 @@ class Episode:
                         if near and not self.enc_active.get((a, b)):
                             self._encounter(a, b, now)  # 조우당 1회 협의
                         self.enc_active[(a, b)] = near
+            if self.v2:
+                self._v2_logistics(now)
             # 전원 집결 → 의사일정; 유예 초과 시 부분 회의 (판단2 복귀 추정이 빗나간 경우의 안전망)
             if due:
                 present = [rid for rid, r in self.robots.items()
