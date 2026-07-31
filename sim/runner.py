@@ -115,6 +115,12 @@ class Episode:
         self.enc_active = {}  # (a,b) -> 조우 중 여부 (조우당 협의 1회)
         self._dump_until = {}  # rid -> 하역 완료 시각 (v2)
         self._last_dump = {}   # rid -> 마지막 하역 시각 (timer-dump 비교군용)
+        self._mission = -1     # 대형의 소파 임무 tid (-1=없음) — 모집 후 3자 합류
+        self._recruits = set() # 이 임무에 모집된 소형 rid
+        self._mission_t0 = 0.0
+        self._mission_cool = {}  # tid -> 포기 시각 (재시도 냉각)
+        self._meet_t = None      # 소파 약속 시각 (첫 모집 시 now+1200 고정)
+        self._appt = {}          # rid -> 약속된 소파 tid (시각은 _meet_t 공유)
         self.snaps = []       # 동작 확인 동영상용 장면 기록
         self.idle_map = IdlenessMap(self.env)
         self.tasks_by_id = {x.tid: x for x in self.stream.tasks}
@@ -236,6 +242,8 @@ class Episode:
                 if orid != 0:
                     self.robots[orid].cargo += 1  # 소형이 실음 (대형 자가수거는 무제한 통)
             return False
+        if task.carry == "loadable" and 0 in task.arrived:
+            return False  # 대형 현장 — 들기+상차 결합 완료 (적재 대기 불필요)
         if task.carry == "loadable" and task.staged_at is None:
             # 소형 2가 들어올려 도로변에 둠 → 둘 다 현장에서 대형을 기다림 (전용 모드)
             task.staged_at = now
@@ -337,6 +345,13 @@ class Episode:
             self.trace.log(now, "misintervention", rid=rid, tid=task.tid, sev=sev)
             return
         # 진짜 task — 인원 충분?
+        if (self.v2 and task.carry == "loadable" and task.tid == self._mission):
+            task.arrived.add(rid)
+            r.mode = "joint_wait"; r.work_tid = task.tid
+            r.target = task.xy.copy()
+            self.wait_since[rid] = now
+            self._recruits.add(rid)
+            return  # 대형 임무 소파에 자력 도착 — 합류 대기
         task.arrived.add(rid)
         if len(task.arrived) >= task.n:
             self._start_work(task, rid, now)
@@ -362,6 +377,20 @@ class Episode:
         self.mem[b].merge_from(self.mem[a])
         self.trace.log(now, "encounter", pair=(a, b))
         if self.v2 and 0 in (a, b):
+            truck = self.robots[0]
+            small = self.robots[b if a == 0 else a]
+            if self._mission >= 0 and small.mode == "patrol" and small.rid not in self._recruits:
+                # (바쁜 소형 모집은 실험상 역효과 — 잔여 작업이 약속을 어김. 한가할 때만)
+                t_p = self.tasks_by_id.get(self._mission)
+                if t_p is not None and t_p.active:
+                    if self._meet_t is None:
+                        self._meet_t = now + 1200.0  # 약속: 20분 뒤 소파 앞
+                    eta = float(np.linalg.norm(t_p.xy - small.xy)) / small.v
+                    if now + eta <= self._meet_t - 30.0:
+                        self._appt[small.rid] = t_p.tid  # 약속만 — 그때까지 순찰 계속
+                        self._recruits.add(small.rid)
+                        self.trace.log(now, "recruit", rid=small.rid, tid=t_p.tid,
+                                       meet_in=round(self._meet_t - now))
             if self.arm.truck_fetch:
                 small = self.robots[b if a == 0 else a]
                 if small.cargo >= 2 and small.mode == "patrol":
@@ -429,12 +458,12 @@ class Episode:
         # ── 접촉 하역: 소형이 하역처 3m 이내 + 짐 있음 → 30s (수거함은 무인, 대형은 정차)
         for rid in smalls:
             r = self.robots[rid]
-            truck_ok = self.arm.fixed_bin or truck.mode in ("patrol", "dumping")
+            truck_ok = self.arm.fixed_bin or truck.mode in ("patrol", "dumping", "parked")
             if (r.cargo > 0 and r.mode in ("patrol", "detour") and truck_ok
                     and float(np.linalg.norm(r.xy - depot())) < 3.0):
-                r.mode = "dumping"; r.work_tid = -1
-                if not self.arm.fixed_bin:
-                    truck.mode = "dumping"
+                r.mode = "dumping"
+                if not self.arm.fixed_bin and truck.mode != "parked":
+                    truck.mode = "dumping"  # 주차 중엔 주차 유지 (하역 병행)
                 self._dump_until[rid] = now + self.dump_s
                 self.trace.log(now, "dump_start", rid=rid, cargo=r.cargo)
         for rid in smalls:
@@ -444,9 +473,33 @@ class Episode:
                 self._last_dump[rid] = now
                 r.cargo = 0
                 r.mode = "patrol"
-                if not self.arm.fixed_bin and all(self.robots[o].mode != "dumping" for o in (1, 2)):
+                if not self.arm.fixed_bin and truck.mode == "dumping"                         and all(self.robots[o].mode != "dumping" for o in (1, 2)):
                     truck.mode = "patrol"
                 self._resume_at_idle(rid, now)
+        # ── 소파 약속 이행: 제시간 도착하도록 출발 (조우 약속의 리드타임)
+        if self._meet_t is not None:
+            for rid, tid in list(self._appt.items()):
+                r = self.robots[rid]
+                t_m = self.tasks_by_id.get(tid)
+                if t_m is None or not t_m.active or self._mission != tid:
+                    self._appt.pop(rid, None)
+                    continue
+                if r.mode == "patrol":
+                    eta = float(np.linalg.norm(t_m.xy - r.xy)) / r.v
+                    if now + eta >= self._meet_t - 20.0:
+                        r.mode = "detour"; r.target = t_m.xy.copy()
+                        r.target_cid = -4; r.work_tid = tid
+            if now > self._meet_t + 600.0 and self._mission >= 0:
+                # 약속 파탄 — 임무 포기·냉각·전원 해제
+                self._mission_cool[self._mission] = now
+                for rid in list(self._appt):
+                    self._appt.pop(rid, None)
+                for o in (1, 2):
+                    if self.robots[o].mode == "joint_wait":
+                        self.robots[o].mode = "patrol"; self.robots[o].work_tid = -1
+                        self._resume_at_idle(o, now)
+                self.trace.log(now, "meet_fail", tid=self._mission)
+                self._mission = -1; self._recruits = set(); self._meet_t = None
         # ── 판단6 (비우기 시점) — 변형: no_preempt=가득 찰 때만 / dump_timer=정기 하역
         thr = self.cap if self.arm.no_preempt else max(2, int(0.8 * self.cap))
         for rid in smalls:
@@ -465,10 +518,47 @@ class Episode:
         if self.arm.fixed_bin:
             return  # 대형 정책 없음 (수거함은 무인 고정)
         # ── 대형 정책: 적재 대기(staged) 지점 우선, 없으면 레일 순찰(+자가 수거)
-        staged = [t for t in self.tasks_by_id.values()
-                  if t.active and t.staged_at is not None and t.carry == "loadable"
-                  and self._truck_knows(t)]
+        if int(now) % 15 == 0:
+            known_load = [t for t in self.tasks_by_id.values()
+                          if t.active and t.carry == "loadable" and self._truck_knows(t)]
+        else:
+            known_load = []
+        # 소파 임무 관리 (15초 주기): 선정 → 조우 모집 → 둘 모이면 수렴·결합 상차
+        if self._mission >= 0:
+            t_m = self.tasks_by_id.get(self._mission)
+            if t_m is None or not t_m.active or now - self._mission_t0 > 2400.0:
+                self._mission_cool[self._mission] = now
+                self._mission = -1; self._recruits = set(); self._meet_t = None
+                self._appt.clear()
+        if self._mission < 0 and known_load:
+            fresh = [t for t in known_load if t.staged_at is None
+                     and now - self._mission_cool.get(t.tid, -1e9) > 1800.0]
+            if fresh:
+                pick = min(fresh, key=lambda t: abs(self.env.route.project(t.xy) - truck.hub_s))
+                self._mission = pick.tid; self._recruits = set(); self._mission_t0 = now
+                self.trace.log(now, "mission_set", tid=pick.tid)
+        if self._mission >= 0 and truck.mode == "patrol":
+            t_m = self.tasks_by_id.get(self._mission)
+            waiters = [o for o in (1, 2) if self.robots[o].mode == "joint_wait"
+                       and self.robots[o].work_tid == self._mission]
+            conv = (self._meet_t is not None
+                    and now + abs(self.env.route.project(t_m.xy) - truck.hub_s) / truck.v
+                        >= self._meet_t - 20.0)
+            if conv or len(waiters) >= 1:
+                s_m = self.env.route.project(t_m.xy)
+                if abs(s_m - truck.hub_s) > self.arm_r:
+                    truck.hub_dir = 1 if s_m > truck.hub_s else -1  # 약속 시각 맞춰 수렴
+                elif len(waiters) >= 2:
+                    t_m.work_until = now + t_m.c + self.load_s
+                    t_m.arrived |= {0, 1, 2}
+                    truck.mode = "working"; truck.work_tid = t_m.tid
+                    for o in waiters:
+                        self.robots[o].mode = "working"; self.robots[o].work_tid = t_m.tid
+                    self._mission = -1; self._recruits = set(); self._meet_t = None
+                    self._appt.clear()
+                    self.trace.log(now, "load_start", tid=t_m.tid, joint=True)
         if truck.mode == "patrol":
+            staged = [t for t in known_load if t.staged_at is not None]
             if staged:
                 tgt = min(staged, key=lambda t: abs(self.env.route.project(t.xy) - truck.hub_s))
                 s_t = self.env.route.project(tgt.xy)
@@ -479,7 +569,7 @@ class Episode:
                     waiters = [o for o in (1, 2)
                                if self.robots[o].mode == "staged_wait"
                                and self.robots[o].work_tid == tgt.tid]
-                    if len(waiters) >= 2:
+                    if tgt.staged_at is not None and len(waiters) >= 2:
                         tgt.work_until = now + self.load_s
                         tgt.arrived |= {0, 1, 2}
                         truck.mode = "working"; truck.work_tid = tgt.tid
@@ -487,6 +577,7 @@ class Episode:
                             self.robots[o].mode = "working"
                             self.robots[o].work_tid = tgt.tid
                         self.trace.log(now, "load_start", tid=tgt.tid)
+
         # ── 대형 자가 수거: 팔 범위 내 portable 임무 (근접 판정 후 작업)
         if truck.mode == "patrol":
             for t in self.stream.spawned(now):
@@ -499,6 +590,30 @@ class Episode:
                         truck.mode = "working"; truck.work_tid = t.tid
                         self.trace.log(now, "truck_pickup", tid=t.tid)
                     break
+
+    def _try_joint_load(self, task, rid: int, now: float) -> bool:
+        """주차 대형 옆 소파에 소형 합류. 둘 모이면 들기+상차 결합 개시. True=처리됨."""
+        truck = self.robots[0]
+        if not (task.active and truck.mode == "parked" and truck.work_tid == task.tid):
+            return False
+        r = self.robots[rid]
+        task.arrived.add(rid)
+        others = [o for o in (1, 2) if o != rid
+                  and self.robots[o].mode == "joint_wait"
+                  and self.robots[o].work_tid == task.tid]
+        if others:
+            task.work_until = now + task.c + self.load_s
+            task.arrived |= {0}
+            for o in others + [rid]:
+                self.robots[o].mode = "working"
+                self.robots[o].work_tid = task.tid
+            truck.mode = "working"; truck.work_tid = task.tid
+            self.trace.log(now, "load_start", tid=task.tid, joint=True)
+        else:
+            r.mode = "joint_wait"; r.work_tid = task.tid
+            r.target = task.xy.copy()
+            self.wait_since[rid] = now
+        return True
 
     def _truck_knows(self, task) -> bool:
         """대형이 적재 대기를 아는가 = 자기 기억에 그 후보가 있고 근접 확인됨 (병합으로 전파)."""
@@ -605,6 +720,16 @@ class Episode:
                             r.mode = "patrol"; r.work_tid = -1
                             self._resume_at_idle(rid, now)
                     continue
+                if r.mode == "joint_wait":
+                    task = self.tasks_by_id.get(r.work_tid)
+                    still = (task is not None and task.active
+                             and self._mission == r.work_tid)
+                    if not still or now - self.wait_since.get(rid, now) > 900:
+                        if task is not None:
+                            task.arrived.discard(rid)
+                        r.mode = "patrol"; r.work_tid = -1
+                        self._resume_at_idle(rid, now)
+                    continue
                 if r.mode == "staged_wait":
                     task = self.tasks_by_id.get(r.work_tid)
                     if task is None or task.t_done is not None:
@@ -642,7 +767,17 @@ class Episode:
                         r.mode = "patrol"; r.target = None; r.target_cid = -1
                 elif r.mode == "detour":
                     if r.move_towards(r.target):
-                        self.on_arrival(rid, r.target_cid, now)
+                        if r.target_cid == -4:  # 모집된 소파 현장 — 합류 대기
+                            task = self.tasks_by_id.get(r.work_tid)
+                            if task is not None and task.active:
+                                task.arrived.add(rid)
+                                r.mode = "joint_wait"; r.target = task.xy.copy()
+                                self.wait_since[rid] = now
+                            else:
+                                r.mode = "patrol"; r.work_tid = -1
+                                self._resume_at_idle(rid, now)
+                        else:
+                            self.on_arrival(rid, r.target_cid, now)
                 elif (r.mode != "at_rdv" and not self.arm.broadcast
                       and not self.arm.encounter_coord
                       and self.rdv.next is not None
