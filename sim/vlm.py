@@ -80,7 +80,10 @@ class VLMSampler:
         p_blind = cell.get("p_blind", 0.0)
         wrong = [j for j in cell["judgments"] if j.get("wrong")]
         if p_blind > 0 and wrong:
-            rng = np.random.default_rng(hash((self.world_seed, oid, band)) & 0x7FFFFFFF)
+            # 주의: 파이썬 hash()는 문자열에 프로세스별 무작위 시드 → 재현성·짝 비교 파괴 (#27)
+            band_code = 0 if band == "near" else 1
+            rng = np.random.default_rng(
+                (int(self.world_seed) * 1_000_003 + int(oid) * 2 + band_code) & 0x7FFFFFFF)
             if rng.random() < p_blind:
                 ps = np.array([j["p"] for j in wrong], float)
                 ps /= ps.sum()

@@ -82,6 +82,12 @@ class Episode:
             self.arm_r = float(self.env.collect.get("truck_arm_r", 8))
             self.env.hub_v = float(self.env.collect.get("truck_v", 1.5))  # 대형은 자체 속도
             self.robots[0].v = self.env.hub_v
+        if self.v2 and self.arm.fixed_bin:
+            formation = "three_sweep"  # 대형 없음 — 셋 다 소형 (폭 3분할)
+            self.robots[0].v = e.v_sweep
+            self.bin_xy = e.route.point_at(e.route.length / 2)  # 고정 수거함 = 노선 중앙
+        else:
+            self.bin_xy = None
         # 대형 비교: "rail"(현행: 가운데 직선) vs "three_sweep"(전원 톱니 — 폭 3분할)
         self.three_sweep = (formation == "three_sweep")
         if self.three_sweep:
@@ -108,6 +114,7 @@ class Episode:
         self.wait_since = {}  # rid -> wait_site 진입 시각 (교착 방지 시한용)
         self.enc_active = {}  # (a,b) -> 조우 중 여부 (조우당 협의 1회)
         self._dump_until = {}  # rid -> 하역 완료 시각 (v2)
+        self._last_dump = {}   # rid -> 마지막 하역 시각 (timer-dump 비교군용)
         self.snaps = []       # 동작 확인 동영상용 장면 기록
         self.idle_map = IdlenessMap(self.env)
         self.tasks_by_id = {x.tid: x for x in self.stream.tasks}
@@ -134,12 +141,14 @@ class Episode:
         if c.committed or r.mode in ("detour", "wait_site", "working", "dumping", "staged_wait"):
             return  # 이동·대기·작업 중에는 새 결정으로 이탈 금지
         if self.v2:
-            if rid == 0:
+            if rid == 0 and not self.arm.fixed_bin:
                 return  # 대형은 자체 정책 (레일+자가수거+상차 대응) — decide 미사용
             task = self.tasks_by_id.get(c.gt_tid)
-            if (task is not None and task.carry == "portable"
-                    and r.cargo >= self.cap):
-                return  # 만적 — 새 수거 불가 (판단6이 하역을 유도)
+            if task is not None:
+                if self.arm.fixed_bin and task.carry == "loadable":
+                    return  # 트럭 없인 소파 수거 물리적 불가 (이 팀의 구조적 한계 — 정직 기재)
+                if task.carry == "portable" and r.cargo >= self.cap:
+                    return  # 만적 — 새 수거 불가 (판단6이 하역을 유도)
         if not self.arm.use_gate:
             g = "act" if c.s_logodds > 0 else "drop"
         else:
@@ -353,6 +362,12 @@ class Episode:
         self.mem[b].merge_from(self.mem[a])
         self.trace.log(now, "encounter", pair=(a, b))
         if self.v2 and 0 in (a, b):
+            if self.arm.truck_fetch:
+                small = self.robots[b if a == 0 else a]
+                if small.cargo >= 2 and small.mode == "patrol":
+                    small.mode = "detour"; small.target = self.robots[0].xy.copy()
+                    small.target_cid = -3  # 조우를 하역 기회로 (30m → 접촉까지 접근)
+                    self.trace.log(now, "fetch_dump", rid=small.rid, cargo=small.cargo)
             return  # 대형은 레일 전용 — 조우는 정보 전파만 (상차·하역은 물류 틱이 담당)
         ra, rb = self.robots[a], self.robots[b]
         # ① 합류: 한쪽이 여럿-임무로 가는 중이거나 현장에서 대기 중이면 파트너가 동행
@@ -409,37 +424,46 @@ class Episode:
     def _v2_logistics(self, now: float):
         """v2 물류 틱: 판단6(소형 비우기) + 접촉 하역 + 대형 정책(상차 우선) + 상차 완료."""
         truck = self.robots[0]
-        # ── 접촉 하역: 소형이 대형 3m 이내 + 짐 있음 + 둘 다 가능 상태 → 30s 하역
-        for rid in (1, 2):
+        smalls = (0, 1, 2) if self.arm.fixed_bin else (1, 2)
+        depot = (lambda: self.bin_xy) if self.arm.fixed_bin else (lambda: truck.xy)
+        # ── 접촉 하역: 소형이 하역처 3m 이내 + 짐 있음 → 30s (수거함은 무인, 대형은 정차)
+        for rid in smalls:
             r = self.robots[rid]
-            if (r.cargo > 0 and r.mode in ("patrol", "detour")
-                    and truck.mode in ("patrol", "dumping")
-                    and float(np.linalg.norm(r.xy - truck.xy)) < 3.0):
+            truck_ok = self.arm.fixed_bin or truck.mode in ("patrol", "dumping")
+            if (r.cargo > 0 and r.mode in ("patrol", "detour") and truck_ok
+                    and float(np.linalg.norm(r.xy - depot())) < 3.0):
                 r.mode = "dumping"; r.work_tid = -1
-                truck.mode = "dumping"
+                if not self.arm.fixed_bin:
+                    truck.mode = "dumping"
                 self._dump_until[rid] = now + self.dump_s
                 self.trace.log(now, "dump_start", rid=rid, cargo=r.cargo)
-        for rid in (1, 2):
+        for rid in smalls:
             r = self.robots[rid]
             if r.mode == "dumping" and now >= self._dump_until.get(rid, 0):
                 self.trace.log(now, "dump_done", rid=rid, cargo=r.cargo)
+                self._last_dump[rid] = now
                 r.cargo = 0
                 r.mode = "patrol"
-                if all(self.robots[o].mode != "dumping" for o in (1, 2)):
+                if not self.arm.fixed_bin and all(self.robots[o].mode != "dumping" for o in (1, 2)):
                     truck.mode = "patrol"
                 self._resume_at_idle(rid, now)
-        # ── 판단6: 잔량 80% 이상이면 대형에게 비우러 감 (대형은 레일 위 — 직행)
-        for rid in (1, 2):
+        # ── 판단6 (비우기 시점) — 변형: no_preempt=가득 찰 때만 / dump_timer=정기 하역
+        thr = self.cap if self.arm.no_preempt else max(2, int(0.8 * self.cap))
+        for rid in smalls:
             r = self.robots[rid]
-            if r.mode == "patrol" and r.cargo >= max(2, int(0.8 * self.cap)):
-                r.mode = "detour"; r.target = truck.xy.copy(); r.target_cid = -3
+            timer_due = (self.arm.dump_timer and r.cargo > 0
+                         and now - self._last_dump.get(rid, 0) > 2400)
+            if r.mode == "patrol" and (r.cargo >= thr or timer_due):
+                r.mode = "detour"; r.target = np.asarray(depot(), float).copy(); r.target_cid = -3
                 self.trace.log(now, "empty_run", rid=rid, cargo=r.cargo)
-        for rid in (1, 2):
+        for rid in smalls:
             r = self.robots[rid]
             if r.mode == "detour" and r.target_cid == -3:
-                r.target = truck.xy.copy()  # 움직이는 대형 추적
+                r.target = np.asarray(depot(), float).copy()  # 이동 하역처 추적
                 if r.move_towards(r.target):
                     pass  # 접촉 하역 블록이 3m에서 잡음
+        if self.arm.fixed_bin:
+            return  # 대형 정책 없음 (수거함은 무인 고정)
         # ── 대형 정책: 적재 대기(staged) 지점 우선, 없으면 레일 순찰(+자가 수거)
         staged = [t for t in self.tasks_by_id.values()
                   if t.active and t.staged_at is not None and t.carry == "loadable"
