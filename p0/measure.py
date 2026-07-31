@@ -152,6 +152,14 @@ def report(rows: list[dict]) -> dict:
 def main():
     src = HERE / "out/main_results.jsonl"
     rows, fails = load_rows(src)
+    # 정답지는 항상 현재 labels.csv 기준 (측정 기록에 박힌 당시 라벨은 재라벨을 못 따라옴)
+    import csv
+    lab = {r["file"]: r for r in csv.DictReader(open(HERE / "labels.csv"))}
+    for r in rows:
+        L = lab.get(r["file"])
+        if L:
+            r["category"], r["gt_class"] = L["category"], L["gt_class"]
+            r["gt_n"], r["gt_u"] = int(L["n"]), int(L["u"])
     total = 1002
     partial = len(rows) + sum(fails.values()) < total
     print(f"판정 {len(rows)}/{total}건 채점 (무응답 {sum(fails.values())}건 반영)"

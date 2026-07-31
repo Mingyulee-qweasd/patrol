@@ -13,7 +13,7 @@ from pathlib import Path
 HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE.parent))
 
-ARMS8 = ["full", "no-sizing", "no-gate", "fixed-rdv", "solo-only",
+ARMS9 = ["encounter", "full", "no-sizing", "no-gate", "fixed-rdv", "solo-only",
          "broadcast", "greedy-reactive", "role-adaptive"]
 LOADS = [0.15, 0.25, 0.4]   # 저·중·고 (D5 부하 보정에서 채택된 축)
 
@@ -41,6 +41,7 @@ def main():
     ap.add_argument("--seeds", type=int, default=25)
     ap.add_argument("--horizon", type=float, default=43200)
     ap.add_argument("--cfg", default="simple.yaml")
+    ap.add_argument("--cfgs", nargs="*", default=None, help="여러 환경 일괄 (지정 시 --cfg 무시)")
     ap.add_argument("--procs", type=int, default=8)
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
@@ -53,8 +54,9 @@ def main():
     done = set()
     if out.exists():  # 이어하기
         done = {key(json.loads(l)) for l in open(out)}
-    jobs = [{"cfg": args.cfg, "seed": s, "arm": a, "load": ld, "horizon": args.horizon}
-            for s in seeds for ld in loads for a in ARMS8]
+    cfgs = args.cfgs or [args.cfg]
+    jobs = [{"cfg": cfg, "seed": s, "arm": a, "load": ld, "horizon": args.horizon}
+            for cfg in cfgs for s in seeds for ld in loads for a in ARMS9]
     jobs = [j for j in jobs if key(j) not in done]
     print(f"실행 {len(jobs)}회 (기완료 {len(done)} 스킵), 병렬 {args.procs}")
 
