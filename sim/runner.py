@@ -82,6 +82,20 @@ class Episode:
             self.arm_r = float(self.env.collect.get("truck_arm_r", 8))
             self.env.hub_v = float(self.env.collect.get("truck_v", 1.5))  # 대형은 자체 속도
             self.robots[0].v = self.env.hub_v
+            # 차선 재배분: 길가(±arm_r)는 대형 전담 — 소형은 바깥쪽만 (중복 제거로 차선 결손 회복)
+            inner = self.arm_r + 2.0
+            for rid, sign in ((1, +1), (2, -1)):
+                w = self.env.corridor_width["left" if sign > 0 else "right"]
+                ss = np.arange(0.0, self.env.route.length + 1e-6, 25.0)
+                wp = []
+                for k, sv in enumerate(ss):
+                    lo, hi = sign * inner, sign * w
+                    pair = [(sv, lo), (sv, hi)] if k % 2 == 0 else [(sv, hi), (sv, lo)]
+                    wp.extend(pair)
+                pts = np.array([self.env.route.frame_to_world(sv, tv) for sv, tv in wp])
+                self.wpath[rid] = pts
+                self.wcum[rid] = np.concatenate(
+                    [[0], np.cumsum(np.linalg.norm(np.diff(pts, axis=0), axis=1))])
         if self.v2 and self.arm.fixed_bin:
             formation = "three_sweep"  # 대형 없음 — 셋 다 소형 (폭 3분할)
             self.robots[0].v = e.v_sweep
