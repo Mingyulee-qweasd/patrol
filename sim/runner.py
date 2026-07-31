@@ -44,7 +44,7 @@ class Episode:
                  warmup_s: float = 1200, rho: float = 0.5,
                  params: Params | None = None, error_model: dict | None = None,
                  arm: Arm | str = "full", lambda_calib: float | None = None,
-                 c_mult: float = 1.0):
+                 c_mult: float = 1.0, formation: str = "rail"):
         self.arm = ARMS[arm] if isinstance(arm, str) else arm
         self.env = load_env(cfg_path)
         self.p = params or Params()
@@ -72,6 +72,24 @@ class Episode:
             pts = np.array([e.route.frame_to_world(s, t) for s, t in e.sweep_paths[side]])
             self.wpath[rid] = pts
             self.wcum[rid] = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(pts, axis=0), axis=1))])
+
+        # 대형 비교: "rail"(현행: 가운데 직선) vs "three_sweep"(전원 톱니 — 폭 3분할)
+        self.three_sweep = (formation == "three_sweep")
+        if self.three_sweep:
+            def band_path(t_lo, t_hi, spacing=25.0):  # spacing은 yaml과 동일 값
+                ss = np.arange(0.0, e.route.length + 1e-6, spacing)
+                wp = []
+                for k, sv in enumerate(ss):
+                    pair = [(sv, t_lo), (sv, t_hi)] if k % 2 == 0 else [(sv, t_hi), (sv, t_lo)]
+                    wp.extend(pair)
+                return np.array([e.route.frame_to_world(sv, tv) for sv, tv in wp])
+            w = max(e.corridor_width.values())
+            for rid, (lo, hi) in {0: (-15.0, 15.0), 1: (15.0, w), 2: (-w, -15.0)}.items():
+                pts = band_path(lo, hi)
+                self.wpath[rid] = pts
+                self.wcum[rid] = np.concatenate(
+                    [[0], np.cumsum(np.linalg.norm(np.diff(pts, axis=0), axis=1))])
+            self.robots[0].v = e.v_sweep  # 가운데도 순찰 속도로 톱니
 
         d0_s = e.route.length / e.hub_v  # 기본 간격 = 스윕 1패스 시간
         self.rdv = RendezvousManager(e, d0_s, e.grace_frac)
@@ -202,7 +220,7 @@ class Episode:
         """복귀 지점 = 현 위치 주변(±250m 스윕창)에서 방치 최대 지점 — 순간이동 없이 걸어서 (판단3)."""
         r = self.robots[rid]
         self._maybe_swap_role(r, now)
-        if r.role == "hub" or self.arm.sebs_patrol:
+        if (r.role == "hub" and not self.three_sweep) or self.arm.sebs_patrol:
             if r.role == "hub":
                 # 이탈 지점의 옛 진행도가 남아 순간이동성 복귀가 되는 것 방지 — 현 위치를 레일에 투영
                 r.hub_s = self.env.route.project(r.xy)
@@ -488,11 +506,13 @@ class Episode:
                         r.target = sub[int(np.argmin(last[mask]))].copy()
                         r.target_cid = -1
                 else:
-                    if r.role == "hub":
+                    if r.role == "hub" and not self.three_sweep:
                         advance_hub(r, self.env)
                         r.hub_s_sync = r.hub_s
                     else:
                         advance_flanker(r, self.env, self.wpath[rid], self.wcum[rid])
+                        if rid == 0 and self.three_sweep:
+                            r.hub_s = self.env.route.project(r.xy)  # 만남 앵커 근사 유지
                 self.sense(rid, now)
             self.idle_map.update([r.xy for r in self.robots.values()], now)
             if int(now) % 20 == 0:  # 장면 기록 (20초마다)
