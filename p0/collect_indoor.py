@@ -72,6 +72,47 @@ TYPES = {
 }
 
 
+# 2차 재검색(1차 수율 낮은 타입 보강) — 타입 → (검색어, 추가 목표)
+ROUND2 = {
+    "indoor_trash": ([
+        "messy classroom floor", "litter cinema floor", "popcorn on floor cinema",
+        "trash under desk office", "crumpled paper on floor", "dirty floor cafeteria",
+        "empty cup on floor", "litter train station floor", "garbage on floor room",
+    ], 36),
+    "spill": ([
+        "coffee spill carpet", "spilled tea floor", "wet floor indoor puddle",
+        "spilled soda floor", "milk spill kitchen floor", "leak bucket floor",
+    ], 12),
+    "fallen_papers": ([
+        "dropped papers hallway", "papers all over the floor", "flyers scattered floor",
+        "newspaper on the floor", "books scattered on floor", "paper mess office floor",
+    ], 18),
+    "fallen_sign": ([
+        "wet floor caution sign", "sandwich board sign fallen", "fallen easel",
+        "sign lying on ground", "toppled sign board", "collapsed banner stand",
+        "fallen advertising sign", "blown over sign", "a-frame sign",
+    ], 36),
+    "blocking_chair": ([
+        "stacked chairs corridor", "furniture blocking hallway", "office chairs hallway",
+        "chair in the middle of the room", "chairs stored hallway",
+    ], 10),
+    "package_box": ([
+        "moving boxes apartment", "packages in mailroom", "parcels doorstep",
+        "amazon boxes door", "boxes stacked room",
+    ], 10),
+    "tipped_bin": ([
+        "overturned bin", "trash can knocked over office", "wastebasket tipped over",
+        "garbage spilled on floor", "overturned recycling bin", "raccoon trash can mess",
+        "dog knocked over trash can", "cat knocked over bin", "trash can on its side",
+    ], 36),
+    "fallen_object": ([
+        "fallen picture frame", "picture fell off wall", "broken picture frame floor",
+        "fallen mirror floor", "ceiling tile fell", "fallen clock floor",
+        "whiteboard fallen over", "fallen shelf books floor",
+    ], 18),
+}
+
+
 def commons_search(query: str, limit: int = 20) -> list[dict]:
     api = "https://commons.wikimedia.org/w/api.php"
     params = {
@@ -147,7 +188,7 @@ def fetch_image(url: str) -> Image.Image | None:
         return None
 
 
-def cmd_collect():
+def cmd_collect(round2: bool = False):
     CAND.mkdir(parents=True, exist_ok=True)
     seen_urls, seen_hash = set(), set()
     if CAND_META.exists():
@@ -155,20 +196,23 @@ def cmd_collect():
             d = json.loads(line)
             seen_urls.add(d["url"])
     meta_f = open(CAND_META, "a")
-    for t, (queries, _) in TYPES.items():
+    plan = (ROUND2 if round2 else
+            {t: (qs, TARGET_CAND) for t, (qs, _) in TYPES.items()})
+    for t, (queries, extra) in plan.items():
         d = CAND / t
         d.mkdir(exist_ok=True)
         n = len(list(d.glob("*.jpg")))
-        if n >= TARGET_CAND:
+        target = n + extra if round2 else extra
+        if n >= target:
             print(f"[{t}] 이미 {n}장 — 건너뜀")
             continue
         for q in queries:
-            if n >= TARGET_CAND:
+            if n >= target:
                 break
             items = openverse_search(q) + commons_search(q)
             time.sleep(2.0)
             for item in items:
-                if n >= TARGET_CAND:
+                if n >= target:
                     break
                 if item["url"] in seen_urls:
                     continue
@@ -188,7 +232,7 @@ def cmd_collect():
                 meta_f.flush()
                 n += 1
                 time.sleep(0.4)
-        print(f"[{t}] 후보 {n}장 (목표 {TARGET_CAND})")
+        print(f"[{t}] 후보 {n}장 (목표 {target})")
     meta_f.close()
 
 
@@ -275,11 +319,13 @@ def cmd_final_sheet():
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["collect", "sheet", "adopt", "final-sheet"])
+    ap.add_argument("cmd", choices=["collect", "collect2", "sheet", "adopt", "final-sheet"])
     ap.add_argument("arg", nargs="?")
     a = ap.parse_args()
     if a.cmd == "collect":
         cmd_collect()
+    elif a.cmd == "collect2":
+        cmd_collect(round2=True)
     elif a.cmd == "sheet":
         cmd_sheet()
     elif a.cmd == "adopt":
