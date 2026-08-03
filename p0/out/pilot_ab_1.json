@@ -1,0 +1,3473 @@
+{
+ "meta": {
+  "purpose": "실내 P0 프롬프트 파일럿 A/B (동결 전 파일럿 — 본 측정 아님)",
+  "date": "2026-08-03 11:27",
+  "model": "qwen3-vl:8b",
+  "config_tag": "qwen3vl8b-901cae-thinkoff-frozen_v1",
+  "think": false,
+  "format_schema": false,
+  "note_schema": "파싱 성공률·V-A3 효과 측정 위해 format 미강제 (v1 본측정과 다름)",
+  "temperature": {
+   "main": 0.0,
+   "reps": 0.7
+  },
+  "variants": {
+   "V0": "/home/aprl/patrol/p0/prompts/indoor_v0.txt",
+   "V-A1": "/home/aprl/patrol/p0/prompts/pilot/indoor_vA1.txt",
+   "V-A3": "/home/aprl/patrol/p0/prompts/pilot/indoor_vA3.txt",
+   "V-A6": "/home/aprl/patrol/p0/prompts/pilot/indoor_vA6.txt"
+  },
+  "images": [
+   "indoor_trash_01.jpg",
+   "indoor_trash_02.jpg",
+   "indoor_trash_03.jpg",
+   "spill_01.jpg",
+   "spill_03.jpg",
+   "spill_15.jpg",
+   "fallen_papers_01.jpg",
+   "blocking_chair_01.jpg",
+   "tipped_bin_03.jpg",
+   "tipped_bin_11.jpg",
+   "tipped_bin_16.jpg",
+   "package_box_01.jpg",
+   "package_box_06.jpg",
+   "fallen_object_12.jpg",
+   "indoor_hazard_008.jpg",
+   "indoor_hazard_013.jpg",
+   "indoor_hazard_016.jpg",
+   "normal_000.jpg",
+   "normal_005.jpg",
+   "normal_016.jpg",
+   "belongings_000.jpg",
+   "belongings_006.jpg",
+   "indoor_ambiguous_001.jpg",
+   "indoor_ambiguous_006.jpg",
+   "indoor_ambiguous_022.jpg",
+   "indoor_ambiguous_023.jpg"
+  ],
+  "ambiguous_note": "001=arranged_chairs(shiny 아님->arranged 몫), 006=delivered, 022/023=managed",
+  "labels": {
+   "belongings_000.jpg": {
+    "is_task": 0,
+    "caps": null,
+    "no_touch": false,
+    "type": "belongings",
+    "subtype": ""
+   },
+   "belongings_006.jpg": {
+    "is_task": 0,
+    "caps": null,
+    "no_touch": false,
+    "type": "belongings",
+    "subtype": ""
+   },
+   "blocking_chair_01.jpg": {
+    "is_task": 1,
+    "caps": [
+     "manip"
+    ],
+    "no_touch": false,
+    "type": "blocking_chair",
+    "subtype": ""
+   },
+   "fallen_object_12.jpg": {
+    "is_task": 1,
+    "caps": [
+     "report"
+    ],
+    "no_touch": false,
+    "type": "fallen_object",
+    "subtype": ""
+   },
+   "fallen_papers_01.jpg": {
+    "is_task": 1,
+    "caps": [
+     "manip"
+    ],
+    "no_touch": false,
+    "type": "fallen_papers",
+    "subtype": ""
+   },
+   "indoor_ambiguous_001.jpg": {
+    "is_task": 0,
+    "caps": null,
+    "no_touch": false,
+    "type": "indoor_ambiguous",
+    "subtype": "arranged_chairs"
+   },
+   "indoor_ambiguous_006.jpg": {
+    "is_task": 0,
+    "caps": null,
+    "no_touch": false,
+    "type": "indoor_ambiguous",
+    "subtype": "delivered_package"
+   },
+   "indoor_ambiguous_022.jpg": {
+    "is_task": 0,
+    "caps": null,
+    "no_touch": false,
+    "type": "indoor_ambiguous",
+    "subtype": "managed"
+   },
+   "indoor_ambiguous_023.jpg": {
+    "is_task": 0,
+    "caps": null,
+    "no_touch": false,
+    "type": "indoor_ambiguous",
+    "subtype": "managed"
+   },
+   "indoor_hazard_008.jpg": {
+    "is_task": 1,
+    "caps": [
+     "report"
+    ],
+    "no_touch": false,
+    "type": "indoor_hazard",
+    "subtype": ""
+   },
+   "indoor_hazard_013.jpg": {
+    "is_task": 1,
+    "caps": [
+     "report"
+    ],
+    "no_touch": false,
+    "type": "indoor_hazard",
+    "subtype": ""
+   },
+   "indoor_hazard_016.jpg": {
+    "is_task": 1,
+    "caps": [
+     "report"
+    ],
+    "no_touch": false,
+    "type": "indoor_hazard",
+    "subtype": ""
+   },
+   "indoor_trash_01.jpg": {
+    "is_task": 1,
+    "caps": [
+     "manip"
+    ],
+    "no_touch": false,
+    "type": "indoor_trash",
+    "subtype": ""
+   },
+   "indoor_trash_02.jpg": {
+    "is_task": 1,
+    "caps": [
+     "manip"
+    ],
+    "no_touch": false,
+    "type": "indoor_trash",
+    "subtype": ""
+   },
+   "indoor_trash_03.jpg": {
+    "is_task": 1,
+    "caps": [
+     "manip"
+    ],
+    "no_touch": false,
+    "type": "indoor_trash",
+    "subtype": ""
+   },
+   "normal_000.jpg": {
+    "is_task": 0,
+    "caps": null,
+    "no_touch": false,
+    "type": "normal",
+    "subtype": ""
+   },
+   "normal_005.jpg": {
+    "is_task": 0,
+    "caps": null,
+    "no_touch": false,
+    "type": "normal",
+    "subtype": ""
+   },
+   "normal_016.jpg": {
+    "is_task": 0,
+    "caps": null,
+    "no_touch": false,
+    "type": "normal",
+    "subtype": ""
+   },
+   "package_box_01.jpg": {
+    "is_task": 0,
+    "caps": null,
+    "no_touch": true,
+    "type": "package_box",
+    "subtype": ""
+   },
+   "package_box_06.jpg": {
+    "is_task": 0,
+    "caps": null,
+    "no_touch": true,
+    "type": "package_box",
+    "subtype": ""
+   },
+   "spill_01.jpg": {
+    "is_task": 1,
+    "caps": [
+     "clean"
+    ],
+    "no_touch": false,
+    "type": "spill",
+    "subtype": ""
+   },
+   "spill_03.jpg": {
+    "is_task": 1,
+    "caps": [
+     "clean"
+    ],
+    "no_touch": false,
+    "type": "spill",
+    "subtype": ""
+   },
+   "spill_15.jpg": {
+    "is_task": 1,
+    "caps": [
+     "clean"
+    ],
+    "no_touch": false,
+    "type": "spill",
+    "subtype": ""
+   },
+   "tipped_bin_03.jpg": {
+    "is_task": 1,
+    "caps": [
+     "clean",
+     "manip"
+    ],
+    "no_touch": false,
+    "type": "tipped_bin",
+    "subtype": ""
+   },
+   "tipped_bin_11.jpg": {
+    "is_task": 1,
+    "caps": [
+     "clean",
+     "manip"
+    ],
+    "no_touch": false,
+    "type": "tipped_bin",
+    "subtype": ""
+   },
+   "tipped_bin_16.jpg": {
+    "is_task": 1,
+    "caps": [
+     "clean",
+     "manip"
+    ],
+    "no_touch": false,
+    "type": "tipped_bin",
+    "subtype": ""
+   }
+  }
+ },
+ "records": [
+  {
+   "call_ok": true,
+   "latency_s": 94.44,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 90, \"reason\": \"Disposable coffee cup on floor likely belongs to someone; no intervention needed per guidelines.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 90,
+    "reason": "Disposable coffee cup on floor likely belongs to someone; no intervention needed per guidelines."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_trash_03.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 31.29,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 85, \"reason\": \"The image shows liquid stains on the floor, likely from a spill. Cleaning robot can handle it without intervention.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "The image shows liquid stains on the floor, likely from a spill. Cleaning robot can handle it without intervention."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "spill_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 101.56,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 2, \"confidence\": 85, \"reason\": \"Crumb debris on the floor requires cleaning by the cleaning robot as it is non-hazardous and not owned by anyone. The cleaning robot can vacuum such solid debris without violating operational principles.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 2,
+    "confidence": 85,
+    "reason": "Crumb debris on the floor requires cleaning by the cleaning robot as it is non-hazardous and not owned by anyone. The cleaning robot can vacuum such solid debris without violating operational principles."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "spill_15.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 92.29,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 2, \"confidence\": 85, \"reason\": \" chairs are placed in hallway without visible ownership (not bags/laptops/books), no immediate danger like broken glass or smoke. Principles require not intervening unless specific hazards exist; thus only recording is necessary.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 2,
+    "confidence": 85,
+    "reason": " chairs are placed in hallway without visible ownership (not bags/laptops/books), no immediate danger like broken glass or smoke. Principles require not intervening unless specific hazards exist; thus only recording is necessary."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "blocking_chair_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 99.77,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 2, \"confidence\": 85, \"reason\": \"Crumpled paper on floor in public area is non-hazardous trash; cleaning robot can suction and remove.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 2,
+    "confidence": 85,
+    "reason": "Crumpled paper on floor in public area is non-hazardous trash; cleaning robot can suction and remove."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_trash_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V0",
+   "file": "indoor_trash_02.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 102.6,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 75, \"reason\": \"액체 누수로 보이는 물질이 바닥에 흘러 있어 청소 작업 필요. 처리 로봇의 닦기·흡입 기능으로 충분하며, 주변 환경에서 위험 요소(깨진 유리 등) 없음. 다만 액체 성분 불확실성으로 인해 확신도 75%로 판단.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 75,
+    "reason": "액체 누수로 보이는 물질이 바닥에 흘러 있어 청소 작업 필요. 처리 로봇의 닦기·흡입 기능으로 충분하며, 주변 환경에서 위험 요소(깨진 유리 등) 없음. 다만 액체 성분 불확실성으로 인해 확신도 75%로 판단."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "spill_03.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 99.43,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 85, \"reason\": \"Scattered papers and office supplies on carpet are not hazardous (no broken glass/contamination), lack clear ownership indicators (not bags/laptops/books), and pose no immediate threat. Robot team should only record as per principle: '확신이 없으면 개입하지 말고 기록만 하십시오.'\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 85,
+    "reason": "Scattered papers and office supplies on carpet are not hazardous (no broken glass/contamination), lack clear ownership indicators (not bags/laptops/books), and pose no immediate threat. Robot team should only record as per principle: '확신이 없으면 개입하지 말고 기록만 하십시오.'"
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "fallen_papers_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 95.29,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 85, \"reason\": \"Spilled wine on carpet is a liquid spill without broken glass or smoke hazards. Cleaning robot can handle it per principles (no owner's item visible, no danger), requiring only cleaning capability.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "Spilled wine on carpet is a liquid spill without broken glass or smoke hazards. Cleaning robot can handle it per principles (no owner's item visible, no danger), requiring only cleaning capability."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "tipped_bin_03.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V0",
+   "file": "tipped_bin_11.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V0",
+   "file": "tipped_bin_16.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V0",
+   "file": "package_box_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 31.29,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 85, \"reason\": \"No confirmed hazards (broken glass/steam) present; hazard symbols on boxes are labels only. No personal items or people to interact with. Robot team should record as normal condition per principles.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 85,
+    "reason": "No confirmed hazards (broken glass/steam) present; hazard symbols on boxes are labels only. No personal items or people to interact with. Robot team should record as normal condition per principles."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "package_box_06.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 96.79,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 90, \"reason\": \"The whiteboard leaning against the wall appears to be part of official signage (AGSM) and not a personal item. No broken glass, smoke, or immediate danger is visible. Since it's unclear if the placement is intentional or an issue, intervention is unnecessary per principles.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 90,
+    "reason": "The whiteboard leaning against the wall appears to be part of official signage (AGSM) and not a personal item. No broken glass, smoke, or immediate danger is visible. Since it's unclear if the placement is intentional or an issue, intervention is unnecessary per principles."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "fallen_object_12.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 16.27,
+   "raw_text": "{\"is_task\": true, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 4, \"confidence\": 95, \"reason\": \"깨진 유리 조각이 위험 요소로 확인되어 즉시 보고 대상으로 기록해야 하며, 로봇은 물건을 만지거나 처리할 수 없으므로 단순히 관찰 및 보고만 수행합니다.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 95,
+    "reason": "깨진 유리 조각이 위험 요소로 확인되어 즉시 보고 대상으로 기록해야 하며, 로봇은 물건을 만지거나 처리할 수 없으므로 단순히 관찰 및 보고만 수행합니다."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_hazard_008.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 21.98,
+   "raw_text": "{\"is_task\":true,\"type\":\"report\",\"capabilities\":[\"report\"],\"urgency\":4,\"confidence\":95,\"reason\":\"깨진 유리 조각이 보이며 위험 요소로 판단되므로 즉시 보고해야 하며, 물건을 만지거나 처리할 수 없으므로 기록만 수행하는 것이 원칙에 부합합니다.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 95,
+    "reason": "깨진 유리 조각이 보이며 위험 요소로 판단되므로 즉시 보고해야 하며, 물건을 만지거나 처리할 수 없으므로 기록만 수행하는 것이 원칙에 부합합니다."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_hazard_013.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 32.46,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"이 장면은 건물 내부의 일반적인 수리 작업으로 보이며, 깨진 유리나 연기와 같은 위험 요소가 없음. 주인의 물건도 없고, 사람·동물이 나타나지 않아 개입 필요 없음. 다만, 파편이 바닥에 흩어져 있어 정찰 로봇으로 기록만 수행해야 함.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "이 장면은 건물 내부의 일반적인 수리 작업으로 보이며, 깨진 유리나 연기와 같은 위험 요소가 없음. 주인의 물건도 없고, 사람·동물이 나타나지 않아 개입 필요 없음. 다만, 파편이 바닥에 흩어져 있어 정찰 로봇으로 기록만 수행해야 함."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_hazard_016.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 15.38,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"장면에는 위험 요소(깨진 유리·연기 등), 개인 소지품(가방·노트북 등), 사람 또는 동물이 없으며, 로봇의 개입 범위 외에 문제점이 없습니다. 따라서 관찰 및 기록만 수행해야 합니다.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "장면에는 위험 요소(깨진 유리·연기 등), 개인 소지품(가방·노트북 등), 사람 또는 동물이 없으며, 로봇의 개입 범위 외에 문제점이 없습니다. 따라서 관찰 및 기록만 수행해야 합니다."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "normal_000.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 77.39,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"학생들이 정상적으로 복도를 이동하며 개인 소지품(배낭)을 안전하게 운반하고 있으며, 환경에 위험 요소(깨진 유리, 연기 등)가 없으므로 개입 불필요. 단순 관찰 및 기록만 수행.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "학생들이 정상적으로 복도를 이동하며 개인 소지품(배낭)을 안전하게 운반하고 있으며, 환경에 위험 요소(깨진 유리, 연기 등)가 없으므로 개입 불필요. 단순 관찰 및 기록만 수행."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "normal_005.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 10.82,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 98, \"reason\": \"강의실 내부가 정돈되어 있으며, 개인 소지품이나 위험 요소(깨진 유리, 연기 등) 없이 순찰 대상에 해당하지 않음. 모든 물건이 자리에 놓여 있어 개입 불필요.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 98,
+    "reason": "강의실 내부가 정돈되어 있으며, 개인 소지품이나 위험 요소(깨진 유리, 연기 등) 없이 순찰 대상에 해당하지 않음. 모든 물건이 자리에 놓여 있어 개입 불필요."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "normal_016.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 15.26,
+   "raw_text": "{\"is_task\": true, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 3, \"confidence\": 85, \"reason\": \"깨진 유리(거울 반사에서 확인된 창문의 균열)가 위험 요소로 식별됨. 원칙에 따라 물건을 만지거나 개입하지 않고 즉시 보고해야 하며, 정찰 로봇만이 관찰 및 기록 가능하므로 'report' 작업 필요.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "깨진 유리(거울 반사에서 확인된 창문의 균열)가 위험 요소로 식별됨. 원칙에 따라 물건을 만지거나 개입하지 않고 즉시 보고해야 하며, 정찰 로봇만이 관찰 및 기록 가능하므로 'report' 작업 필요."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "belongings_000.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 28.63,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"장면에는 주인이 있는 물건(의료용 가방 등)이 있으며, 깨진 유리나 연기와 같은 위험 요소가 없음. 모든 물건이 정상적으로 배치되어 있어 개입 필요 없음.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "장면에는 주인이 있는 물건(의료용 가방 등)이 있으며, 깨진 유리나 연기와 같은 위험 요소가 없음. 모든 물건이 정상적으로 배치되어 있어 개입 필요 없음."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "belongings_006.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 51.29,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"The classroom is empty with no hazards, personal items, or disorder; thus, no intervention required.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "The classroom is empty with no hazards, personal items, or disorder; thus, no intervention required."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_ambiguous_001.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 89.36,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [], \"urgency\": 1, \"confidence\": 90, \"reason\": \"이 장면은 우편물(배달 상자)이 도어 매트에 놓여 있어 주인이 있는 물건이 아니며 위험 요소도 없으므로 개입 필요 없음. 단순 기록만 수행해야 함.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [],
+    "urgency": 1,
+    "confidence": 90,
+    "reason": "이 장면은 우편물(배달 상자)이 도어 매트에 놓여 있어 주인이 있는 물건이 아니며 위험 요소도 없으므로 개입 필요 없음. 단순 기록만 수행해야 함."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_ambiguous_006.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V0",
+   "file": "indoor_ambiguous_022.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 17.99,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"이 장면은 정비 중인 건물 내부로, 안전망과 구역 분리 용도의 철제 울타리가 설치되어 있으며, 주변에 위험 요소(깨진 유리·연기 등)나 개인 소지품 없이 공사 도구 및 재료만 배치된 상태입니다. 따라서 우리 팀은 개입 대상이 아니며 단순 관찰 및 기록만 수행해야 합니다.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "이 장면은 정비 중인 건물 내부로, 안전망과 구역 분리 용도의 철제 울타리가 설치되어 있으며, 주변에 위험 요소(깨진 유리·연기 등)나 개인 소지품 없이 공사 도구 및 재료만 배치된 상태입니다. 따라서 우리 팀은 개입 대상이 아니며 단순 관찰 및 기록만 수행해야 합니다."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_ambiguous_023.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 69.93,
+   "raw_text": "{\"is_task\": true, \"type\": \"cleaning litter\", \"capabilities\": [\"manip\",\"clean\"], \"urgency\": 2, \"confidence\": 85, \"reason\": \"Crumpled paper on floor in public restroom is likely discarded trash (not personal property), requiring manipulation robot to pick up and cleaning robot to transport.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "cleaning litter",
+    "capabilities": [
+     "manip",
+     "clean"
+    ],
+    "urgency": 2,
+    "confidence": 85,
+    "reason": "Crumpled paper on floor in public restroom is likely discarded trash (not personal property), requiring manipulation robot to pick up and cleaning robot to transport."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "indoor_trash_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 98.6,
+   "raw_text": "{\"is_task\": true, \"type\": \"Scattered food waste and debris in a public area requiring cleanup\", \"capabilities\": [\"manip\",\"clean\"], \"urgency\": 3, \"confidence\": 85, \"reason\": \"The scene shows non-dangerous trash (no broken glass or people) scattered on the floor. Cleaning robots can handle vacuuming/mopping after manipulation robots collect items into containers.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "Scattered food waste and debris in a public area requiring cleanup",
+    "capabilities": [
+     "manip",
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "The scene shows non-dangerous trash (no broken glass or people) scattered on the floor. Cleaning robots can handle vacuuming/mopping after manipulation robots collect items into containers."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "indoor_trash_02.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 69.49,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"커피잔은 소유주가 보이지 않는 일반적인 폐기물로, 주인의 물건(가방·노트북·책·우산 등)에 해당하지 않음. 유리 깨짐이나 연기가 없으며, 개입 시 위험 요소도 없음. 따라서 기록만 수행해야 함.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "커피잔은 소유주가 보이지 않는 일반적인 폐기물로, 주인의 물건(가방·노트북·책·우산 등)에 해당하지 않음. 유리 깨짐이나 연기가 없으며, 개입 시 위험 요소도 없음. 따라서 기록만 수행해야 함."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "indoor_trash_03.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 58.41,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 85, \"reason\": \"The floor has liquid stains that require mopping. No personal items present, so cleaning robot can handle it.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "The floor has liquid stains that require mopping. No personal items present, so cleaning robot can handle it."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "spill_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 27.9,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 85, \"reason\": \"액체 유출로 인한 청소 작업이 필요하며 처리 로봇의 닦기·흡입 능력으로 충분합니다.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "액체 유출로 인한 청소 작업이 필요하며 처리 로봇의 닦기·흡입 능력으로 충분합니다."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "spill_03.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 61.25,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 85, \"reason\": \"이 장면은 단순한 식물 잔여물로, 주인이 있는 물건도 없으며 위험 요소도 없음. 처리 로봇의 닦기·흡입 능력은 액체·오염에만 적용되므로 건조한 먼지(크러스트)는 대상이 아님. 따라서 개입 불필요하고 기록만 수행.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 85,
+    "reason": "이 장면은 단순한 식물 잔여물로, 주인이 있는 물건도 없으며 위험 요소도 없음. 처리 로봇의 닦기·흡입 능력은 액체·오염에만 적용되므로 건조한 먼지(크러스트)는 대상이 아님. 따라서 개입 불필요하고 기록만 수행."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "spill_15.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A1",
+   "file": "fallen_papers_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 112.58,
+   "raw_text": "{\"is_task\":false,\"type\":\"report\",\"capabilities\":[\"report\"],\"urgency\":1,\"confidence\":90,\"reason\":\" chairs are misplaced but uncertain if intentional;",
+   "judgment": null,
+   "parse_ok": false,
+   "parse_error": "Unterminated string starting at: line 1 column 97 (char 96)",
+   "variant": "V-A1",
+   "file": "blocking_chair_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A1",
+   "file": "tipped_bin_03.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A1",
+   "file": "tipped_bin_11.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 30.43,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 85, \"reason\": \"Spilled liquid and debris on floor requires cleaning robot to handle spill without touching personal items.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "Spilled liquid and debris on floor requires cleaning robot to handle spill without touching personal items."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "tipped_bin_16.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 69.72,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"The cardboard box is intact, not blocking the door, and shows no signs of damage or hazard. As it appears to be a delivery item (labeled 'TARGET STORES') with no indication of being abandoned or causing obstruction, intervention is unnecessary per team principles.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "The cardboard box is intact, not blocking the door, and shows no signs of damage or hazard. As it appears to be a delivery item (labeled 'TARGET STORES') with no indication of being abandoned or causing obstruction, intervention is unnecessary per team principles."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "package_box_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 35.79,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"카메라로 관찰한 결과, 복도 좌측에 배치된 박스는 'CUSTOMER RETURNED' 라벨과 함께 정리되어 있으며, 주변 환경(복도 통행 경로 차단 없음, 유리/연기 등 위험 요소 없음)을 고려할 때 개인 소유물이 아닌 건물 내부 물품으로 보임. 따라서 개입 대상이 아니며 단순 관찰 및 기록만 수행해야 함.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "카메라로 관찰한 결과, 복도 좌측에 배치된 박스는 'CUSTOMER RETURNED' 라벨과 함께 정리되어 있으며, 주변 환경(복도 통행 경로 차단 없음, 유리/연기 등 위험 요소 없음)을 고려할 때 개인 소유물이 아닌 건물 내부 물품으로 보임. 따라서 개입 대상이 아니며 단순 관찰 및 기록만 수행해야 함."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "package_box_06.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 69.27,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"AGSM signage leaning against wall is not broken or hazardous (no glass/steam), and appears to be intentional placement. No owner-related items present; no intervention needed per principles.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "AGSM signage leaning against wall is not broken or hazardous (no glass/steam), and appears to be intentional placement. No owner-related items present; no intervention needed per principles."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "fallen_object_12.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 27.54,
+   "raw_text": "{\"is_task\": true, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 4, \"confidence\": 95, \"reason\": \"Broken glass on the floor constitutes a hazard requiring immediate reporting without physical intervention per safety protocols.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 95,
+    "reason": "Broken glass on the floor constitutes a hazard requiring immediate reporting without physical intervention per safety protocols."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "indoor_hazard_008.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 16.77,
+   "raw_text": "{\"is_task\": true, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 4, \"confidence\": 95, \"reason\": \"깨진 유리 조각은 위험 요소로 즉시 보고해야 하며, 로봇 팀의 정찰 로봇만이 관찰 및 기록 가능하므로 개입(물건 처리) 대신 'report' 작업이 필요합니다.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 95,
+    "reason": "깨진 유리 조각은 위험 요소로 즉시 보고해야 하며, 로봇 팀의 정찰 로봇만이 관찰 및 기록 가능하므로 개입(물건 처리) 대신 'report' 작업이 필요합니다."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "indoor_hazard_013.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A1",
+   "file": "indoor_hazard_016.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 95.32,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"No hazards, debris, or irregularities detected; hallway appears clean and properly maintained with functional signage. No personal items or unsafe conditions require intervention.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "No hazards, debris, or irregularities detected; hallway appears clean and properly maintained with functional signage. No personal items or unsafe conditions require intervention."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "normal_000.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 62.2,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"No hazards (broken glass, smoke) or personal items requiring intervention; students are moving normally without obstruction.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "No hazards (broken glass, smoke) or personal items requiring intervention; students are moving normally without obstruction."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "normal_005.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 15.46,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"Classroom is empty with no hazards or issues requiring intervention; all furniture properly arranged and no signs of damage or unauthorized items.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "Classroom is empty with no hazards or issues requiring intervention; all furniture properly arranged and no signs of damage or unauthorized items."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "normal_016.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 46.33,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"주인의 물건(노트북, 책, 콜라캔 등)이 보이며 깨진 유리나 연기 없음. 개인 소유물에 대한 개입 금지 원칙에 따라 처리 대상 없음.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "주인의 물건(노트북, 책, 콜라캔 등)이 보이며 깨진 유리나 연기 없음. 개인 소유물에 대한 개입 금지 원칙에 따라 처리 대상 없음."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "belongings_000.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 15.08,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"주인이 있는 물건(의료용 빨간 십자가 가방)이 보이며, 깨진 유리나 연기 등 위험 요소 없음. 따라서 개입 불필요.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "주인이 있는 물건(의료용 빨간 십자가 가방)이 보이며, 깨진 유리나 연기 등 위험 요소 없음. 따라서 개입 불필요."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "belongings_006.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 31.31,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 100, \"reason\": \"No hazards, personal items, or people detected; classroom appears clean and orderly with no signs requiring intervention.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 100,
+    "reason": "No hazards, personal items, or people detected; classroom appears clean and orderly with no signs requiring intervention."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "indoor_ambiguous_001.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A1",
+   "file": "indoor_ambiguous_006.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A1",
+   "file": "indoor_ambiguous_022.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 27.1,
+   "raw_text": "{\"is_task\": true, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 90, \"reason\": \"이 장면은 건설 중인 공간으로, 유리 파편이나 연기 등 위험 요소가 없으며 주인이 있는 물건도 없음. 따라서 정찰 로봇만으로 관찰 및 기록 작업이 필요함.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 90,
+    "reason": "이 장면은 건설 중인 공간으로, 유리 파편이나 연기 등 위험 요소가 없으며 주인이 있는 물건도 없음. 따라서 정찰 로봇만으로 관찰 및 기록 작업이 필요함."
+   },
+   "parse_ok": true,
+   "variant": "V-A1",
+   "file": "indoor_ambiguous_023.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 31.14,
+   "raw_text": "{\"is_task\": true, \"type\": \"Crumpled paper litter on restroom floor requires cleanup\", \"capabilities\": [\"manip\",\"clean\"], \"urgency\": 2, \"confidence\": 90, \"reason\": \"Litter in public restroom is not hazardous or personal property. Manip robot collects trash; clean robot processes.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "Crumpled paper litter on restroom floor requires cleanup",
+    "capabilities": [
+     "manip",
+     "clean"
+    ],
+    "urgency": 2,
+    "confidence": 90,
+    "reason": "Litter in public restroom is not hazardous or personal property. Manip robot collects trash; clean robot processes."
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "indoor_trash_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A3",
+   "file": "indoor_trash_02.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A3",
+   "file": "indoor_trash_03.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 29.04,
+   "raw_text": "{\"is_task\": true, \"type\": \"바닥에 액체 유출(예: 커피)으로 인한 오염 제거\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 85, \"reason\": \"액체 유출로 보이는 갈색 얼룩이 바닥에 확실하게 나타나며, 위험 요소(깨진 유리·연기 등)가 없으나 미끄러움으로 인한 사고 예방을 위해 처리 로봇의 닦기·흡입 능력으로 해결 가능\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "바닥에 액체 유출(예: 커피)으로 인한 오염 제거",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "액체 유출로 보이는 갈색 얼룩이 바닥에 확실하게 나타나며, 위험 요소(깨진 유리·연기 등)가 없으나 미끄러움으로 인한 사고 예방을 위해 처리 로봇의 닦기·흡입 능력으로 해결 가능"
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "spill_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 88.7,
+   "raw_text": "{\"is_task\": true, \"type\": \"액체 유출로 인한 미끄러움 위험 발생\", \"capabilities\": [\"clean\"], \"urgency\": 4, \"confidence\": 90, \"reason\": \"지면에 흘러있는 노란색 액체는 미끄러운 표면을 형성하여 안전 위협으로 판단됨. 처리 로봇의 닦기·흡입 기능으로 직접 청소 가능하며, 유출물이 주변 환경에 영향을 줄 수 있는 긴급 상황\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "액체 유출로 인한 미끄러움 위험 발생",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 4,
+    "confidence": 90,
+    "reason": "지면에 흘러있는 노란색 액체는 미끄러운 표면을 형성하여 안전 위협으로 판단됨. 처리 로봇의 닦기·흡입 기능으로 직접 청소 가능하며, 유출물이 주변 환경에 영향을 줄 수 있는 긴급 상황"
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "spill_03.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 25.57,
+   "raw_text": "{\"is_task\": true, \"type\": \"Crumbs scattered on the wooden floor in a public area require cleaning.\", \"capabilities\": [\"clean\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"The image shows non-dangerous food debris (crumbs) without visible ownership or hazards. Cleaning robot can handle it via vacuuming module; no manipulation needed as items are small and not hazardous.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "Crumbs scattered on the wooden floor in a public area require cleaning.",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "The image shows non-dangerous food debris (crumbs) without visible ownership or hazards. Cleaning robot can handle it via vacuuming module; no manipulation needed as items are small and not hazardous."
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "spill_15.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 98.61,
+   "raw_text": "{\"is_task\": false, \"type\": \"기록·관리자 보고만\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 85, \"reason\": \"주인이 있는 물건(녹색 책)이 바닥에 놓여 있어 개입 불가. 문서는 일반적인 낙하물로 추정되나, 개인 소유물 확인 불가 시 보고만 수행해야 함.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "기록·관리자 보고만",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 85,
+    "reason": "주인이 있는 물건(녹색 책)이 바닥에 놓여 있어 개입 불가. 문서는 일반적인 낙하물로 추정되나, 개인 소유물 확인 불가 시 보고만 수행해야 함."
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "fallen_papers_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A3",
+   "file": "blocking_chair_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 27.01,
+   "raw_text": "{\"is_task\": true, \"type\": \"Report broken wine glass and spilled liquid as hazardous material\", \"capabilities\": [\"report\"], \"urgency\": 3, \"confidence\": 95, \"reason\": \"Broken glass and spilled liquid constitute a hazard requiring immediate reporting per team principles; no intervention is needed as the spill poses slipping risk but isn't critical.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "Report broken wine glass and spilled liquid as hazardous material",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 3,
+    "confidence": 95,
+    "reason": "Broken glass and spilled liquid constitute a hazard requiring immediate reporting per team principles; no intervention is needed as the spill poses slipping risk but isn't critical."
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "tipped_bin_03.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A3",
+   "file": "tipped_bin_11.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A3",
+   "file": "tipped_bin_16.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A3",
+   "file": "package_box_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 34.58,
+   "raw_text": "{\"is_task\": false, \"type\": \"정상적인 복도 상태로 개입 필요 없음\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"복도 내 카드보드 상자 및 소방기 등은 주인이 명확하지 않으나, 장애물이 없으며 위험 요소(깨진 유리·연기)가 없음. 개인 물건으로 판단할 수 없어 개입 불필요\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "정상적인 복도 상태로 개입 필요 없음",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "복도 내 카드보드 상자 및 소방기 등은 주인이 명확하지 않으나, 장애물이 없으며 위험 요소(깨진 유리·연기)가 없음. 개인 물건으로 판단할 수 없어 개입 불필요"
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "package_box_06.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 61.39,
+   "raw_text": "{\"is_task\": false, \"type\": \"기록만 (확신 없음)\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 70, \"reason\": \"흰 보드가 벽에 기울어져 있지만, 위험 요소(깨진 유리 등)나 개인 소유물이 아닌 것으로 보여 개입 필요 없음. 확신도 70%로, 비슷한 장면에서 70개 중 70개에서 판단이 맞을 것 같음.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "기록만 (확신 없음)",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 70,
+    "reason": "흰 보드가 벽에 기울어져 있지만, 위험 요소(깨진 유리 등)나 개인 소유물이 아닌 것으로 보여 개입 필요 없음. 확신도 70%로, 비슷한 장면에서 70개 중 70개에서 판단이 맞을 것 같음."
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "fallen_object_12.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 14.98,
+   "raw_text": "{\"is_task\": true, \"type\": \"Broken glass on floor requires immediate reporting due to hazard.\", \"capabilities\": [\"report\"], \"urgency\": 4, \"confidence\": 95, \"reason\": \"Presence of broken glass is a hazardous material per principles; must report without intervention. No handling allowed.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "Broken glass on floor requires immediate reporting due to hazard.",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 95,
+    "reason": "Presence of broken glass is a hazardous material per principles; must report without intervention. No handling allowed."
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "indoor_hazard_008.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 21.74,
+   "raw_text": "{\"is_task\": true, \"type\": \"깨진 유리 조각들이 바닥에 흩어져 있어 보행자에게 부상 위험을 초래할 수 있는 위험 요소입니다.\", \"capabilities\": [\"report\"], \"urgency\": 4, \"confidence\": 95, \"reason\": \"이 장면은 주인의 물건이 없고 사람·동물도 보이지 않으며, 깨진 유리만 존재하므로 위험 요소로 판단됩니다. 로봇 팀은 위험을 직접 처리할 수 없으나 즉시 보고해야 하며, 해당 상황에서 조작 또는 처리 로봇의 개입은 안전 규정에 위배됩니다.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "깨진 유리 조각들이 바닥에 흩어져 있어 보행자에게 부상 위험을 초래할 수 있는 위험 요소입니다.",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 95,
+    "reason": "이 장면은 주인의 물건이 없고 사람·동물도 보이지 않으며, 깨진 유리만 존재하므로 위험 요소로 판단됩니다. 로봇 팀은 위험을 직접 처리할 수 없으나 즉시 보고해야 하며, 해당 상황에서 조작 또는 처리 로봇의 개입은 안전 규정에 위배됩니다."
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "indoor_hazard_013.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A3",
+   "file": "indoor_hazard_016.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 21.92,
+   "raw_text": "{\"is_task\": false, \"type\": \"기록만 필요 (정상 상태)\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"복도는 깨끗하고 안전 표시물이 정상적으로 작동하며, 개인 소지품이나 위험 요소(깨진 유리·연기 등)가 없음. 모든 문은 닫혀 있으며, 벤치와 장식물은 관리 대상이 아닌 물건임. 따라서 개입 불필요.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "기록만 필요 (정상 상태)",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "복도는 깨끗하고 안전 표시물이 정상적으로 작동하며, 개인 소지품이나 위험 요소(깨진 유리·연기 등)가 없음. 모든 문은 닫혀 있으며, 벤치와 장식물은 관리 대상이 아닌 물건임. 따라서 개입 불필요."
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "normal_000.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 29.4,
+   "raw_text": "{\"is_task\": false, \"type\": \"No intervention required; routine student movement in safe corridor.\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"Students walking normally with no hazards or personal items on floor. No broken glass, smoke, or urgent issues detected per guidelines.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "No intervention required; routine student movement in safe corridor.",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "Students walking normally with no hazards or personal items on floor. No broken glass, smoke, or urgent issues detected per guidelines."
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "normal_005.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 23.49,
+   "raw_text": "{\"is_task\": false, \"type\": \"No intervention required; classroom appears clean and orderly with no hazards or personal items needing handling.\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"All furniture is properly arranged without broken glass, smoke, or personal belongings. Classroom meets safety standards without requiring action.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "No intervention required; classroom appears clean and orderly with no hazards or personal items needing handling.",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "All furniture is properly arranged without broken glass, smoke, or personal belongings. Classroom meets safety standards without requiring action."
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "normal_016.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 22.89,
+   "raw_text": "{\"is_task\": false, \"type\": \"\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"이 장면에는 깨진 유리·연기 등 위험 요소가 없으며, 주인의 물건(노트북, 책, 캔)은 건드리지 않아야 합니다. 거울 표면의 긁힘은 단순한 손상으로 위험 요소로 판단되지 않습니다.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "이 장면에는 깨진 유리·연기 등 위험 요소가 없으며, 주인의 물건(노트북, 책, 캔)은 건드리지 않아야 합니다. 거울 표면의 긁힘은 단순한 손상으로 위험 요소로 판단되지 않습니다."
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "belongings_000.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 60.15,
+   "raw_text": "{\"is_task\": false, \"type\": \"기록·관리자 보고만\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"의료 상징이 있는 가방은 주인의 소유물로 판단되며 위험 요소(깨진 유리·연기 등) 없음. 주인이 있는 물건을 건드리지 않아 기록 및 보고만 필요.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "기록·관리자 보고만",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "의료 상징이 있는 가방은 주인의 소유물로 판단되며 위험 요소(깨진 유리·연기 등) 없음. 주인이 있는 물건을 건드리지 않아 기록 및 보고만 필요."
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "belongings_006.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 81.08,
+   "raw_text": "{\"is_task\": false, \"type\": \"이 장면은 정상적인 강의실로, 위험 요소나 개입 대상이 없음\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"강의실 내부가 청결하며, 개인 소지품이나 위험 요소(깨진 유리·연기 등)가 전혀 보이지 않음. 모든 의자와 책상은 정렬되어 있으며, 사람 또는 동물이 없으므로 개입 대상이 아님\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "이 장면은 정상적인 강의실로, 위험 요소나 개입 대상이 없음",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "강의실 내부가 청결하며, 개인 소지품이나 위험 요소(깨진 유리·연기 등)가 전혀 보이지 않음. 모든 의자와 책상은 정렬되어 있으며, 사람 또는 동물이 없으므로 개입 대상이 아님"
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "indoor_ambiguous_001.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A3",
+   "file": "indoor_ambiguous_006.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 68.52,
+   "raw_text": "{\"is_task\": true, \"type\": \"Wet floor hazard requires cleaning\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 85, \"reason\": \"The caution sign explicitly states 'WET FLOOR', indicating an active hazard. Cleaning robot can address the liquid spill via mopping/suction without physical intervention per team capabilities.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "Wet floor hazard requires cleaning",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "The caution sign explicitly states 'WET FLOOR', indicating an active hazard. Cleaning robot can address the liquid spill via mopping/suction without physical intervention per team capabilities."
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "indoor_ambiguous_022.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 22.34,
+   "raw_text": "{\"is_task\": false, \"type\": \"기록만 (건설 중인 구역으로 판단됨)\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"건설 현장의 철망과 도구들이 보이지만, 깨진 유리·연기 등 위험 요소 없음. 주인이 있는 물건도 없으며, 로봇 개입 범위(청소/조작) 외에 문제 없음.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "기록만 (건설 중인 구역으로 판단됨)",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "건설 현장의 철망과 도구들이 보이지만, 깨진 유리·연기 등 위험 요소 없음. 주인이 있는 물건도 없으며, 로봇 개입 범위(청소/조작) 외에 문제 없음."
+   },
+   "parse_ok": true,
+   "variant": "V-A3",
+   "file": "indoor_ambiguous_023.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 103.2,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 85, \"reason\": \"Crumpled paper on the floor in a public area is likely litter (not personal items or hazards), so cleaning robot can vacuum it. No immediate danger, but needs maintenance.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "Crumpled paper on the floor in a public area is likely litter (not personal items or hazards), so cleaning robot can vacuum it. No immediate danger, but needs maintenance."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "indoor_trash_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 97.27,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 2, \"confidence\": 90, \"reason\": \"The floor is littered with non-personal trash (e.g., plastic bags, food wrappers) in a public area without broken glass or hazards. Cleaning bot can vacuum/mop this mess without violating principles.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 2,
+    "confidence": 90,
+    "reason": "The floor is littered with non-personal trash (e.g., plastic bags, food wrappers) in a public area without broken glass or hazards. Cleaning bot can vacuum/mop this mess without violating principles."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "indoor_trash_02.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 16.96,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"커피잔은 주인이 있는 개인 소지품으로 판단되며, 유출이나 위험 요소가 없으므로 개입하지 않고 단순 기록만 수행해야 합니다.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "커피잔은 주인이 있는 개인 소지품으로 판단되며, 유출이나 위험 요소가 없으므로 개입하지 않고 단순 기록만 수행해야 합니다."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "indoor_trash_03.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 34.68,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 85, \"reason\": \"The image shows liquid stains on the floor, likely from a spill, which requires cleaning to prevent slips. The cleaner robot can handle this without needing other robots.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "The image shows liquid stains on the floor, likely from a spill, which requires cleaning to prevent slips. The cleaner robot can handle this without needing other robots."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "spill_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A6",
+   "file": "spill_03.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 36.06,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 2, \"confidence\": 90, \"reason\": \"Scattered food debris on floor requires cleaning by the cleaning robot",
+   "judgment": null,
+   "parse_ok": false,
+   "parse_error": "Unterminated string starting at: line 1 column 105 (char 104)",
+   "variant": "V-A6",
+   "file": "spill_15.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 100.81,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 85, \"reason\": \"Scattered papers without visible owner items (no bags/notebooks) and no hazards like broken glass or smoke. Per principles, uncertain ownership means only recording is required; no intervention for clutter as it's not an emergency or task within robot capabilities.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 85,
+    "reason": "Scattered papers without visible owner items (no bags/notebooks) and no hazards like broken glass or smoke. Per principles, uncertain ownership means only recording is required; no intervention for clutter as it's not an emergency or task within robot capabilities."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "fallen_papers_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 32.84,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 85, \"reason\": \"두 개의 사무용 의자가 복도 중앙에 놓여 있으나, 깨진 유리·연기 등 위험 요소가 없으며 주인이 있는 물건이 아니므로 개입 불필요. 다만 장애물로 인한 즉각적 위험(예: 넘어짐)은 확인되지 않아 기록만 수행.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 85,
+    "reason": "두 개의 사무용 의자가 복도 중앙에 놓여 있으나, 깨진 유리·연기 등 위험 요소가 없으며 주인이 있는 물건이 아니므로 개입 불필요. 다만 장애물로 인한 즉각적 위험(예: 넘어짐)은 확인되지 않아 기록만 수행."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "blocking_chair_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A6",
+   "file": "tipped_bin_03.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A6",
+   "file": "tipped_bin_11.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A6",
+   "file": "tipped_bin_16.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 29.91,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 85, \"reason\": \"The cardboard box is a delivery item from Target Stores placed in a public area. It shows no signs of damage or hazard (e.g., broken glass, smoke), and there's no indication it blocks access or poses immediate risk. Since the team cannot confirm ownership or if intervention is required per principles (no clear owner/issue), only recording/reporting is appropriate.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 85,
+    "reason": "The cardboard box is a delivery item from Target Stores placed in a public area. It shows no signs of damage or hazard (e.g., broken glass, smoke), and there's no indication it blocks access or poses immediate risk. Since the team cannot confirm ownership or if intervention is required per principles (no clear owner/issue), only recording/reporting is appropriate."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "package_box_01.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 96.89,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 90, \"reason\": \"장면에는 주인이 있는 물건(고객 반품 라벨이 붙은 박스)과 위험 요소가 없으며, 로봇 팀의 개입 범위 외에 해당됨. 카메라로 관찰만 수행하고 기록하는 것이 원칙에 부합.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 90,
+    "reason": "장면에는 주인이 있는 물건(고객 반품 라벨이 붙은 박스)과 위험 요소가 없으며, 로봇 팀의 개입 범위 외에 해당됨. 카메라로 관찰만 수행하고 기록하는 것이 원칙에 부합."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "package_box_06.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A6",
+   "file": "fallen_object_12.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 12.81,
+   "raw_text": "{\"is_task\": true, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 4, \"confidence\": 95, \"reason\": \"깨진 유리 조각은 위험 요소로 분류되며, 로봇 팀이 직접 개입할 수 없으므로 즉시 보고해야 합니다. 주변 물건(가방·책 등)은 확인되지 않아 건드리지 않고, 깨진 유리 자체만 기록 및 관리자 보고를 통해 처리해야 합니다.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 95,
+    "reason": "깨진 유리 조각은 위험 요소로 분류되며, 로봇 팀이 직접 개입할 수 없으므로 즉시 보고해야 합니다. 주변 물건(가방·책 등)은 확인되지 않아 건드리지 않고, 깨진 유리 자체만 기록 및 관리자 보고를 통해 처리해야 합니다."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "indoor_hazard_008.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 59.93,
+   "raw_text": "{\"is_task\": true, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 4, \"confidence\": 95, \"reason\": \"Broken glass on the ground is a hazard requiring immediate reporting per guidelines; no intervention needed as it's not managed or safe to handle.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 95,
+    "reason": "Broken glass on the ground is a hazard requiring immediate reporting per guidelines; no intervention needed as it's not managed or safe to handle."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "indoor_hazard_013.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V-A6",
+   "file": "indoor_hazard_016.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 42.63,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"이 장면에는 위험 요소(깨진 유리, 연기 등), 사람/동물, 개인 소지품 없으며 이미 관리된 안전 표시(출구 표지판)만 존재하므로 개입 불필요. 정찰 로봇으로 기록만 수행.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "이 장면에는 위험 요소(깨진 유리, 연기 등), 사람/동물, 개인 소지품 없으며 이미 관리된 안전 표시(출구 표지판)만 존재하므로 개입 불필요. 정찰 로봇으로 기록만 수행."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "normal_000.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 51.83,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"No hazards (broken glass, smoke), personal items left unattended, or people in distress. Students are moving normally with backpacks; only observation and recording required per principles.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "No hazards (broken glass, smoke), personal items left unattended, or people in distress. Students are moving normally with backpacks; only observation and recording required per principles."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "normal_005.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 11.87,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"강의실 내부가 정돈되어 있으며, 깨진 유리·연기 등 위험 요소 없음. 주인 소유물(가방·노트북 등)도 발견되지 않아 개입 불필요.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "강의실 내부가 정돈되어 있으며, 깨진 유리·연기 등 위험 요소 없음. 주인 소유물(가방·노트북 등)도 발견되지 않아 개입 불필요."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "normal_016.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 89.24,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 100, \"reason\": \"주인의 물건(노트북·책·캔)이 있으며 깨진 유리 또는 위험 요소 없음. 원칙에 따라 개입 불가하고 기록만 필요.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 100,
+    "reason": "주인의 물건(노트북·책·캔)이 있으며 깨진 유리 또는 위험 요소 없음. 원칙에 따라 개입 불가하고 기록만 필요."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "belongings_000.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 61.24,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"주인이 있는 가방(의료용 빨간 십자가 표시)이 바닥에 놓여 있어 개입 금지. 깨진 유리·연기 등 위험 요소 없음. 모든 물건은 주인 소유로 판단되며, 로봇 팀은 개인 소유물 및 비상 상황 외에는 개입하지 않음.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "주인이 있는 가방(의료용 빨간 십자가 표시)이 바닥에 놓여 있어 개입 금지. 깨진 유리·연기 등 위험 요소 없음. 모든 물건은 주인 소유로 판단되며, 로봇 팀은 개인 소유물 및 비상 상황 외에는 개입하지 않음."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "belongings_006.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 18.64,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"No hazards, people, or owner items present; classroom appears orderly and safe with no signs of damage or irregularities requiring intervention.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "No hazards, people, or owner items present; classroom appears orderly and safe with no signs of damage or irregularities requiring intervention."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "indoor_ambiguous_001.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 55.61,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"The Amazon package on the doormat is a delivery intended for the resident, thus falling under '주인이 있어 보이는 물건' and must not be touched. Our team should only record it without intervention per guidelines.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "The Amazon package on the doormat is a delivery intended for the resident, thus falling under '주인이 있어 보이는 물건' and must not be touched. Our team should only record it without intervention per guidelines."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "indoor_ambiguous_006.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 21.24,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"The presence of a 'WET FLOOR' caution sign indicates the hazard is already managed by existing signage. Per principles, no intervention is needed; only recording (report) is required as it's explicitly stated to document such signs without action.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "The presence of a 'WET FLOOR' caution sign indicates the hazard is already managed by existing signage. Per principles, no intervention is needed; only recording (report) is required as it's explicitly stated to document such signs without action."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "indoor_ambiguous_022.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 24.35,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 90, \"reason\": \"Construction area is properly fenced off with existing barriers managing the space; no personal items or hazards requiring intervention per principles.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 90,
+    "reason": "Construction area is properly fenced off with existing barriers managing the space; no personal items or hazards requiring intervention per principles."
+   },
+   "parse_ok": true,
+   "variant": "V-A6",
+   "file": "indoor_ambiguous_023.jpg",
+   "temperature": 0.0,
+   "rep": 0
+  },
+  {
+   "call_ok": true,
+   "latency_s": 72.07,
+   "raw_text": "{\"is_task\": true, \"type\": \"toilet paper litter cleanup in restroom\", \"capabilities\": [\"manip\",\"clean\"], \"urg",
+   "judgment": null,
+   "parse_ok": false,
+   "parse_error": "Unterminated string starting at: line 1 column 105 (char 104)",
+   "variant": "V0",
+   "file": "indoor_trash_01.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 61.6,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 85, \"reason\": \"The floor has extensive scattered trash (plastic bags, food remnants) in a public university area; no people/animals present, and cleaner robots can suction/mop without needing manipulation. Urgency is moderate (risk of tripping) but not immediate.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "The floor has extensive scattered trash (plastic bags, food remnants) in a public university area; no people/animals present, and cleaner robots can suction/mop without needing manipulation. Urgency is moderate (risk of tripping) but not immediate."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_trash_02.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 89.43,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"컵은 개인 소유물로 보이며, 유출이나 위험 요소 없이 정상적으로 놓여 있어 개입 필요 없음. 주인의 물건임을 확인할 수 있으므로 기록만 수행\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "컵은 개인 소유물로 보이며, 유출이나 위험 요소 없이 정상적으로 놓여 있어 개입 필요 없음. 주인의 물건임을 확인할 수 있으므로 기록만 수행"
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_trash_03.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 21.31,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 2, \"confidence\": 85, \"reason\": \"Floor has liquid stains (likely spilled coffee) requiring cleaning; no hazards or personal items present. Clean robot's suction/wiping capabilities are sufficient for minor spill cleanup without needing manipulation.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 2,
+    "confidence": 85,
+    "reason": "Floor has liquid stains (likely spilled coffee) requiring cleaning; no hazards or personal items present. Clean robot's suction/wiping capabilities are sufficient for minor spill cleanup without needing manipulation."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "spill_01.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 67.53,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 90, \"reason\": \"Floor has liquid spill that requires cleaning to maintain safety and hygiene. Cleaning robot can handle this without intervention from other robots.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 90,
+    "reason": "Floor has liquid spill that requires cleaning to maintain safety and hygiene. Cleaning robot can handle this without intervention from other robots."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "spill_03.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 64.45,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 1, \"confidence\": 90, \"reason\": \"Crumbs on floor without visible owner items; processing robot can suction debris safely.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 1,
+    "confidence": 90,
+    "reason": "Crumbs on floor without visible owner items; processing robot can suction debris safely."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "spill_15.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 67.34,
+   "raw_text": "{\"is_task\":true,\"type\":\"report\",\"capabilities\":[\"report\"],\"urgency\":2,\"confidence\":90,\"reason\":\"Scattered documents on carpet without visible personal items (e.g., bags), so no intervention per principles. Report required as it's an observation for management.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 2,
+    "confidence": 90,
+    "reason": "Scattered documents on carpet without visible personal items (e.g., bags), so no intervention per principles. Report required as it's an observation for management."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "fallen_papers_01.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 53.37,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 85, \"reason\": \"의자 두 개는 복도 중앙에 위치해 있으나 출입 통로를 방해하지 않고, 깨진 유리·연기 등 위험 요소가 없으며 주인 소유물로 보이지 않아 개입 필요성이 없음. 확신이 없으므로 기록만 하도록 원칙에 따라 처리함.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 85,
+    "reason": "의자 두 개는 복도 중앙에 위치해 있으나 출입 통로를 방해하지 않고, 깨진 유리·연기 등 위험 요소가 없으며 주인 소유물로 보이지 않아 개입 필요성이 없음. 확신이 없으므로 기록만 하도록 원칙에 따라 처리함."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "blocking_chair_01.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V0",
+   "file": "tipped_bin_03.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 65.44,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 90, \"reason\": \"Spilled cereal and milk on floor in public area requires cleaning. No owner items present (no bags/books visible), spill is accidental, not dangerous (no broken glass). Cleaning robot can handle liquid and contaminants.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 90,
+    "reason": "Spilled cereal and milk on floor in public area requires cleaning. No owner items present (no bags/books visible), spill is accidental, not dangerous (no broken glass). Cleaning robot can handle liquid and contaminants."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "tipped_bin_11.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V0",
+   "file": "tipped_bin_16.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 107.38,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [], \"urgency\": 1, \"confidence\": 85, \"reason\": \"The cardboard box labeled 'TARGET STORES' appears to be a delivery package with no visible obstruction of the door or hazard (e.g., broken glass). Since it's likely intended for someone in the building and there's no indication of immediate risk or owner presence requiring intervention per team principles, only recording is necessary.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [],
+    "urgency": 1,
+    "confidence": 85,
+    "reason": "The cardboard box labeled 'TARGET STORES' appears to be a delivery package with no visible obstruction of the door or hazard (e.g., broken glass). Since it's likely intended for someone in the building and there's no indication of immediate risk or owner presence requiring intervention per team principles, only recording is necessary."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "package_box_01.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 29.19,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"카메라로 관찰된 장면에서 주인의 물건(고객 반품 요청 표시 상자 등)이 정상적으로 배치되어 있으며, 깨진 유리·연기 등 위험 요소 없음. 복도 통행 가능한 상태로 로봇 팀 개입 필요 없음.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "카메라로 관찰된 장면에서 주인의 물건(고객 반품 요청 표시 상자 등)이 정상적으로 배치되어 있으며, 깨진 유리·연기 등 위험 요소 없음. 복도 통행 가능한 상태로 로봇 팀 개입 필요 없음."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "package_box_06.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 30.28,
+   "raw_text": "{\"is_task\": true, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 75, \"reason\": \"The leaning whiteboard appears to be a normal signage placement without immediate hazard (e.g., not blocking paths or posing tripping risk). As it lacks clear evidence of improper positioning or owner-related items, intervention is unnecessary per guidelines. Recording as routine observation aligns with 'report' protocol.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 75,
+    "reason": "The leaning whiteboard appears to be a normal signage placement without immediate hazard (e.g., not blocking paths or posing tripping risk). As it lacks clear evidence of improper positioning or owner-related items, intervention is unnecessary per guidelines. Recording as routine observation aligns with 'report' protocol."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "fallen_object_12.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 33.74,
+   "raw_text": "{\"is_task\": true, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 4, \"confidence\": 95, \"reason\": \"깨진 유리로 인한 넘어짐 위험은 즉시 보고해야 하는 위험 요소로, 물건을 만지거나 조작하지 않고 단순히 기록만 하면 됩니다.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 95,
+    "reason": "깨진 유리로 인한 넘어짐 위험은 즉시 보고해야 하는 위험 요소로, 물건을 만지거나 조작하지 않고 단순히 기록만 하면 됩니다."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_hazard_008.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 27.85,
+   "raw_text": "{\"is_task\": true, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 4, \"confidence\": 95, \"reason\": \"깨진 유리 조각은 보행자에게 위험한 트립 위험을 발생시킬 수 있는 즉각적인 위협으로, 물리적 개입 없이 관찰 및 보고가 필요합니다. 로봇의 역할은 위험 요소를 기록하고 관리자에 보고하는 것이며, 유리 조각은 처리 로봇의 흡입/청소 범위(액체·오염물)와 조작 로봇의 3kg 이하 물건 수송 능력과 맞지 않아 개입 불가합니다.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 95,
+    "reason": "깨진 유리 조각은 보행자에게 위험한 트립 위험을 발생시킬 수 있는 즉각적인 위협으로, 물리적 개입 없이 관찰 및 보고가 필요합니다. 로봇의 역할은 위험 요소를 기록하고 관리자에 보고하는 것이며, 유리 조각은 처리 로봇의 흡입/청소 범위(액체·오염물)와 조작 로봇의 3kg 이하 물건 수송 능력과 맞지 않아 개입 불가합니다."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_hazard_013.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V0",
+   "file": "indoor_hazard_016.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 19.36,
+   "raw_text": "{\"is_task\": false, \"type\": [\"report\"], \"capabilities\": [], \"urgency\": 1, \"confidence\": 95, \"reason\": \"해당 복도는 정상 상태로 깨진 유리·연기 등 위험 요소 없으며 주인의 물건(예: 벤치의 패브릭)이 훼손되지 않았습니다. 로봇 팀은 개입 대상이 없으므로 단순 기록만 수행합니다.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": [
+     "report"
+    ],
+    "capabilities": [],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "해당 복도는 정상 상태로 깨진 유리·연기 등 위험 요소 없으며 주인의 물건(예: 벤치의 패브릭)이 훼손되지 않았습니다. 로봇 팀은 개입 대상이 없으므로 단순 기록만 수행합니다."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "normal_000.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 46.11,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"정상적인 복도 상황으로 사람·물건 상태가 정상이며 위험 요소 없음. 주인 물품(가방 등) 무관, 개입 불필요\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "정상적인 복도 상황으로 사람·물건 상태가 정상이며 위험 요소 없음. 주인 물품(가방 등) 무관, 개입 불필요"
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "normal_005.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 45.72,
+   "raw_text": "{\"is_task\":false,\"type\":\"report\",\"capabilities\":[\"report\"],\"urgency\":1,\"confidence\":95,\"reason\":\"강의실 내부가 정돈되어 있으며, 사람·동물·위험 요소(깨진 유리, 연기 등)가 없고 주인이 있는 물건이 절대 건드리지 않아도 되는 상태로, 팀 개입 대상이 아님\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "강의실 내부가 정돈되어 있으며, 사람·동물·위험 요소(깨진 유리, 연기 등)가 없고 주인이 있는 물건이 절대 건드리지 않아도 되는 상태로, 팀 개입 대상이 아님"
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "normal_016.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V0",
+   "file": "belongings_000.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 7.43,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"장면에는 주인의 물건(우편함, 책상 위 전자기기, 구급용 가방 등)이 놓여 있으며 깨진 유리·연기 등 위험 요소가 없음. 원칙에 따라 주인 소유물은 건드리지 않고, 위험하지 않은 상황이라 개입 불필요.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "장면에는 주인의 물건(우편함, 책상 위 전자기기, 구급용 가방 등)이 놓여 있으며 깨진 유리·연기 등 위험 요소가 없음. 원칙에 따라 주인 소유물은 건드리지 않고, 위험하지 않은 상황이라 개입 불필요."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "belongings_006.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 16.26,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"교실 내부가 정돈되어 있으며, 깨진 유리·연기 등 위험 요소나 주인의 물건(가방·노트북 등)이 없음. 모든 의자와 책상이 규칙적으로 배치되어 있어 일반적인 강의실 상태로 판단됨.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "교실 내부가 정돈되어 있으며, 깨진 유리·연기 등 위험 요소나 주인의 물건(가방·노트북 등)이 없음. 모든 의자와 책상이 규칙적으로 배치되어 있어 일반적인 강의실 상태로 판단됨."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_ambiguous_001.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 96.42,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"Package is a delivery intended for an occupant; per principles, no intervention required.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "Package is a delivery intended for an occupant; per principles, no intervention required."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_ambiguous_006.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V0",
+   "file": "indoor_ambiguous_022.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 19.26,
+   "raw_text": "{\"is_task\": false, \"type\": \"\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"이 장면은 건설 중인 공간으로, 깨진 유리·연기 등 위험 요소가 없고 주인이 보이는 물건도 존재하지 않음. 로봇 팀의 개입 대상(해당하는 경우 기록만)이 없으므로 'report'로 기록하며, 긴급도 1(한가할 때), 확신도 95% (비슷한 장면에서 95개 중 95개가 동일 판단)\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "이 장면은 건설 중인 공간으로, 깨진 유리·연기 등 위험 요소가 없고 주인이 보이는 물건도 존재하지 않음. 로봇 팀의 개입 대상(해당하는 경우 기록만)이 없으므로 'report'로 기록하며, 긴급도 1(한가할 때), 확신도 95% (비슷한 장면에서 95개 중 95개가 동일 판단)"
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_ambiguous_023.jpg",
+   "temperature": 0.7,
+   "rep": 1
+  },
+  {
+   "call_ok": true,
+   "latency_s": 61.83,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 2, \"confidence\": 85, \"reason\": \"The crumpled toilet paper on the floor is non-hazardous debris without an identifiable owner. Cleaning robots can suction and remove such waste per their capabilities.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 2,
+    "confidence": 85,
+    "reason": "The crumpled toilet paper on the floor is non-hazardous debris without an identifiable owner. Cleaning robots can suction and remove such waste per their capabilities."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_trash_01.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 60.69,
+   "raw_text": "{\"is_task\": true, \"type\": \"청소 작업\", \"capabilities\": [\"manip\", \"clean\"], \"urgency\": 2, \"confidence\": 95, \"reason\": \"장면에는 위험 요소(깨진 유리 등)가 없고 주인의 물건이 보이지 않아 로봇 팀이 개입 가능. 조작 로봇으로 쓰레기를 처리 로봇의 짐칸에 실어주고 처리 로봇이 닦기·흡입하는 작업 필요. 긴급도 2(한가할 때)로 판단하며, 비슷한 장면 100개 중 95개에서 유사한 상황 발생 가능성 높음.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "청소 작업",
+    "capabilities": [
+     "manip",
+     "clean"
+    ],
+    "urgency": 2,
+    "confidence": 95,
+    "reason": "장면에는 위험 요소(깨진 유리 등)가 없고 주인의 물건이 보이지 않아 로봇 팀이 개입 가능. 조작 로봇으로 쓰레기를 처리 로봇의 짐칸에 실어주고 처리 로봇이 닦기·흡입하는 작업 필요. 긴급도 2(한가할 때)로 판단하며, 비슷한 장면 100개 중 95개에서 유사한 상황 발생 가능성 높음."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_trash_02.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 36.4,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 70, \"reason\": \"커피잔은 주인이",
+   "judgment": null,
+   "parse_ok": false,
+   "parse_error": "Unterminated string starting at: line 1 column 108 (char 107)",
+   "variant": "V0",
+   "file": "indoor_trash_03.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 65.06,
+   "raw_text": "{\"is_task\": true, \"type\": \"liquid spill cleanup on floor in public area\", \"capabilities\": [\"clean\"], \"urgency\": 4, \"confidence\": 85, \"reason\": \"Visible brown liquid stain indicates possible spill requiring cleaning; no hazardous elements or personal items present for intervention.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "liquid spill cleanup on floor in public area",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 4,
+    "confidence": 85,
+    "reason": "Visible brown liquid stain indicates possible spill requiring cleaning; no hazardous elements or personal items present for intervention."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "spill_01.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 105.89,
+   "raw_text": "{\"is_task\":",
+   "judgment": null,
+   "parse_ok": false,
+   "parse_error": "Expecting value: line 1 column 12 (char 11)",
+   "variant": "V0",
+   "file": "spill_03.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 87.6,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 2, \"confidence\": 90, \"reason\": \"Scattered food crumbs on the wooden floor require cleaning. No hazardous elements or personal items present; cleaning robot can handle debris without intervention.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 2,
+    "confidence": 90,
+    "reason": "Scattered food crumbs on the wooden floor require cleaning. No hazardous elements or personal items present; cleaning robot can handle debris without intervention."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "spill_15.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 43.21,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"이 장면은 일반적인 문서 분산으로 위험 요소(깨진 유리·연기 등)가 없으며 주인 소유물도 확인되지 않아 개입 대상이 아님. 정찰 로봇만 관찰 및 기록 가능.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "이 장면은 일반적인 문서 분산으로 위험 요소(깨진 유리·연기 등)가 없으며 주인 소유물도 확인되지 않아 개입 대상이 아님. 정찰 로봇만 관찰 및 기록 가능."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "fallen_papers_01.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 96.55,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 85, \"reason\": \"확신이 없으므로 개입하지 않음: 의자(주인이 있어 보이는 물건 목록에 포함되지 않음)가 복도를 방해하는지 여부 및 소유권 확인 불가. 원칙에 따라 주인의 물건인지 확실하지 않을 경우 개입 금지.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 85,
+    "reason": "확신이 없으므로 개입하지 않음: 의자(주인이 있어 보이는 물건 목록에 포함되지 않음)가 복도를 방해하는지 여부 및 소유권 확인 불가. 원칙에 따라 주인의 물건인지 확실하지 않을 경우 개입 금지."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "blocking_chair_01.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 31.37,
+   "raw_text": "{\"is_task\":true,\"type\":\"clean\",\"capabilities\":[\"clean\"],\"urgency\":3,\"confidence\":85,\"reason\":\"Wine spill on carpet requires cleaning; no broken glass or hazards present, so cleaning robot can handle liquid stains directly.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "Wine spill on carpet requires cleaning; no broken glass or hazards present, so cleaning robot can handle liquid stains directly."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "tipped_bin_03.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 31.5,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 90, \"reason\": \"Spilled cereal and milk on the floor in a public area requires cleanup to prevent slipping hazards; no people/animals present, so cleaning robot can handle liquid and debris safely without risking damage to personal items.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 90,
+    "reason": "Spilled cereal and milk on the floor in a public area requires cleanup to prevent slipping hazards; no people/animals present, so cleaning robot can handle liquid and debris safely without risking damage to personal items."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "tipped_bin_11.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 36.14,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 85, \"reason\": \"Spilled drink with ice cubes on floor; no hazardous elements (broken glass/smoke) or personal items (bags/notebooks) nearby. Cleaning robot can handle liquid spill without intervention needed.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "Spilled drink with ice cubes on floor; no hazardous elements (broken glass/smoke) or personal items (bags/notebooks) nearby. Cleaning robot can handle liquid spill without intervention needed."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "tipped_bin_16.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 45.48,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"The cardboard box labeled 'TARGET STORES' appears to be owner's property (unauthorized items are not indicated), so no intervention is needed per team principles. Only recording is required.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "The cardboard box labeled 'TARGET STORES' appears to be owner's property (unauthorized items are not indicated), so no intervention is needed per team principles. Only recording is required."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "package_box_01.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 36.27,
+   "raw_text": "{\"is_task\": true, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 3, \"confidence\": 70, \"reason\": \" cardboard boxes obstructing the corridor may impede emergency access but are not confirmed as immediate",
+   "judgment": null,
+   "parse_ok": false,
+   "parse_error": "Unterminated string starting at: line 1 column 107 (char 106)",
+   "variant": "V0",
+   "file": "package_box_06.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 29.48,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 85, \"reason\": \"AGSM signage appears to be part of institutional setup; leaning board may be intentional placement. No hazard or owner-claimed item evident per principles. Uncertainty about necessity prevents intervention.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 85,
+    "reason": "AGSM signage appears to be part of institutional setup; leaning board may be intentional placement. No hazard or owner-claimed item evident per principles. Uncertainty about necessity prevents intervention."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "fallen_object_12.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 13.54,
+   "raw_text": "{\"is_task\": true, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 4, \"confidence\": 95, \"reason\": \"복도 바닥에 깨진 유리 조각들이 여러 개 흩어져 있어 안전 위험 요소로 즉시 보고해야 합니다.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 95,
+    "reason": "복도 바닥에 깨진 유리 조각들이 여러 개 흩어져 있어 안전 위험 요소로 즉시 보고해야 합니다."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_hazard_008.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 21.63,
+   "raw_text": "{\"is_task\":true,\"type\":\"report\",\"capabilities\":[\"report\"],\"urgency\":4,\"confidence\":95,\"reason\":\"깨진 유리 조각이 위험 요소로 판단되며, 팀의 원칙에 따라 직접 처리할 수 없고 즉시 보고해야 함. 주변 환경에서 사람·동물·물건이 없으므로 기록 및 관리자 보고만 수행.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 95,
+    "reason": "깨진 유리 조각이 위험 요소로 판단되며, 팀의 원칙에 따라 직접 처리할 수 없고 즉시 보고해야 함. 주변 환경에서 사람·동물·물건이 없으므로 기록 및 관리자 보고만 수행."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_hazard_013.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V0",
+   "file": "indoor_hazard_016.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 16.75,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"해당 복도는 깨진 유리·연기 등 위험 요소 없이 청결하며 주인이 있는 물건(예: 벤치)은 훼손되지 않았고, 사람·동물의 존재도 확인되지 않아 로봇 팀 개입 필요 없음.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "해당 복도는 깨진 유리·연기 등 위험 요소 없이 청결하며 주인이 있는 물건(예: 벤치)은 훼손되지 않았고, 사람·동물의 존재도 확인되지 않아 로봇 팀 개입 필요 없음."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "normal_000.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 30.32,
+   "raw_text": "{\"is_task\": false, \"type\": \"\", \"capabilities\": [], \"urgency\": 1, \"confidence\": 100, \"reason\": \"정상적인 학생 활동으로 위험 요소 없고 주인 물건(가방)은 사람과 함께 있어 개입 불필요\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "",
+    "capabilities": [],
+    "urgency": 1,
+    "confidence": 100,
+    "reason": "정상적인 학생 활동으로 위험 요소 없고 주인 물건(가방)은 사람과 함께 있어 개입 불필요"
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "normal_005.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 40.68,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"이 장면은 정상적인 강의실로, 사람이 없고 주인 물건(가방·노트북 등)도 보이지 않으며 깨진 유리·연기 등 위험 요소도 없다. 따라서 개입 대상이 아니며 단순 관찰 및 기록만 수행해야 한다.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "이 장면은 정상적인 강의실로, 사람이 없고 주인 물건(가방·노트북 등)도 보이지 않으며 깨진 유리·연기 등 위험 요소도 없다. 따라서 개입 대상이 아니며 단순 관찰 및 기록만 수행해야 한다."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "normal_016.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 15.86,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"이 장면은 개인 소유물(노트북, 음료수 캔 등)이 놓인 정상적인 작업 공간으로, 깨진 유리나 위험 요소가 없으며 주인이 있는 물건을 건드리지 않는 원칙에 따라 개입 불필요. 모든 물건이 안정적으로 배치되어 있어 긴급도 낮음.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "이 장면은 개인 소유물(노트북, 음료수 캔 등)이 놓인 정상적인 작업 공간으로, 깨진 유리나 위험 요소가 없으며 주인이 있는 물건을 건드리지 않는 원칙에 따라 개입 불필요. 모든 물건이 안정적으로 배치되어 있어 긴급도 낮음."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "belongings_000.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 86.63,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"No hazardous elements (broken glass/smoke), personal items (medical bag with red cross) are untouched per rules, and no intervention is needed as all objects appear secure and non-urgent.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "No hazardous elements (broken glass/smoke), personal items (medical bag with red cross) are untouched per rules, and no intervention is needed as all objects appear secure and non-urgent."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "belongings_006.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 6.44,
+   "raw_text": "{\"is_task\":false,\"type\":\"report\",\"capabilities\":[\"report\"],\"urgency\":1,\"confidence\":95,\"reason\":\" classroom appears orderly with intact furniture; no hazardous elements (broken glass/smoke), people/animals present, or owner belongings requiring handling per principles. No intervention needed.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": " classroom appears orderly with intact furniture; no hazardous elements (broken glass/smoke), people/animals present, or owner belongings requiring handling per principles. No intervention needed."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_ambiguous_001.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 15.0,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"배송 물품은 주인의 소유로 간주되며, 팀이 처리할 사항이 없음\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "배송 물품은 주인의 소유로 간주되며, 팀이 처리할 사항이 없음"
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_ambiguous_006.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 33.11,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 4, \"confidence\": 90, \"reason\": \"Wet floor sign indicates hazardous condition requiring cleaning; processing robot can handle via suction/wipe modules.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 4,
+    "confidence": 90,
+    "reason": "Wet floor sign indicates hazardous condition requiring cleaning; processing robot can handle via suction/wipe modules."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_ambiguous_022.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 28.56,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"施工现场被围栏隔离，无人员、动物或危险物品（如破碎玻璃、烟雾），施工材料及工具处于可控状态。根据原则，无需干预仅需记录。\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "施工现场被围栏隔离，无人员、动物或危险物品（如破碎玻璃、烟雾），施工材料及工具处于可控状态。根据原则，无需干预仅需记录。"
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_ambiguous_023.jpg",
+   "temperature": 0.7,
+   "rep": 2
+  },
+  {
+   "call_ok": true,
+   "latency_s": 34.06,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 2, \"confidence\": 85, \"reason\": \"Crumpled paper on the floor in a public area is likely discarded trash. No owner items or hazards are present. Cleaning robot can suction debris without intervention needed.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 2,
+    "confidence": 85,
+    "reason": "Crumpled paper on the floor in a public area is likely discarded trash. No owner items or hazards are present. Cleaning robot can suction debris without intervention needed."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_trash_01.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 65.72,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 90, \"reason\": \"이 장면은 주방 바닥으로 대학 건물의 순찰 범위(복도·로비·강의실 앞)에 해당하지 않으므로 개입 필요 없음. 주인이 있는 물건이나 위험 요소는 없으며, 순찰 로봇만으로 기록(보고)이 필요함.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 90,
+    "reason": "이 장면은 주방 바닥으로 대학 건물의 순찰 범위(복도·로비·강의실 앞)에 해당하지 않으므로 개입 필요 없음. 주인이 있는 물건이나 위험 요소는 없으며, 순찰 로봇만으로 기록(보고)이 필요함."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_trash_02.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 92.28,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 90, \"reason\": \"커피잔은 주인이 있는 것으로 보이지 않으며, 유리 파손이나 연기 등 위험 요소가 없음. 단순히 놓인 물건으로 개입 불필요.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 90,
+    "reason": "커피잔은 주인이 있는 것으로 보이지 않으며, 유리 파손이나 연기 등 위험 요소가 없음. 단순히 놓인 물건으로 개입 불필요."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_trash_03.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 14.29,
+   "raw_text": "{\"is_task\": true, \"type\": \"floor spill cleanup\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 80, \"reason\": \"The image shows a liquid stain on the floor (likely coffee or similar), which requires cleaning to maintain hygiene in university facilities. As there are no hazardous elements (e.g., broken glass) and it's not an immediate safety risk, the clean robot can handle this via suction/wiping without needing manipulation.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "floor spill cleanup",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 80,
+    "reason": "The image shows a liquid stain on the floor (likely coffee or similar), which requires cleaning to maintain hygiene in university facilities. As there are no hazardous elements (e.g., broken glass) and it's not an immediate safety risk, the clean robot can handle this via suction/wiping without needing manipulation."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "spill_01.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 16.91,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 85, \"reason\": \"Liquid spill on the floor poses a slipping hazard requiring cleaning to maintain safety.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "Liquid spill on the floor poses a slipping hazard requiring cleaning to maintain safety."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "spill_03.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 23.7,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 1, \"confidence\": 90, \"reason\": \"크러스트와 미세한 부스러기가 바닥에 흩어져 있으며, 주인의 물건이 아닌 안전한 상태로, 처리 로봇의 닦기·흡입 능력으로 충분히 해결 가능하므로 개입 필요. 긴급도는 낮음(1)이며, 비슷한 장면 100개 중 90개에서 유사 판단이 맞을 것으로 예상.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 1,
+    "confidence": 90,
+    "reason": "크러스트와 미세한 부스러기가 바닥에 흩어져 있으며, 주인의 물건이 아닌 안전한 상태로, 처리 로봇의 닦기·흡입 능력으로 충분히 해결 가능하므로 개입 필요. 긴급도는 낮음(1)이며, 비슷한 장면 100개 중 90개에서 유사 판단이 맞을 것으로 예상."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "spill_15.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 29.63,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 2, \"confidence\": 75, \"reason\": \"Scattered papers on carpet without visible personal items (like bags or notebooks) and no hazardous elements. Since ownership is unclear and the principle states to record only if unsure, intervention is unnecessary as it does not qualify as a task for our team's capabilities.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 2,
+    "confidence": 75,
+    "reason": "Scattered papers on carpet without visible personal items (like bags or notebooks) and no hazardous elements. Since ownership is unclear and the principle states to record only if unsure, intervention is unnecessary as it does not qualify as a task for our team's capabilities."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "fallen_papers_01.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 28.35,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 70, \"reason\": \"의심스러운 물건(의자)이 복도 중앙에 위치해 있지만 주인이 있는지 확인 불가하며, 파손이나 위험 요소 없음. 규칙상 확신 없을 시 개입 금지.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 70,
+    "reason": "의심스러운 물건(의자)이 복도 중앙에 위치해 있지만 주인이 있는지 확인 불가하며, 파손이나 위험 요소 없음. 규칙상 확신 없을 시 개입 금지."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "blocking_chair_01.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 67.56,
+   "raw_text": "{\"is_task\": true, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 4, \"confidence\": 90, \"reason\": \"깨진 유리와 흘러나온 액체는 위험 요소로, 물건을 만지거나 처리할 수 없으므로 즉시 보고만 필요하며, 이 장면은 확실한 위험 신호이기 때문에 긴급도 4로 판단됩니다.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 90,
+    "reason": "깨진 유리와 흘러나온 액체는 위험 요소로, 물건을 만지거나 처리할 수 없으므로 즉시 보고만 필요하며, 이 장면은 확실한 위험 신호이기 때문에 긴급도 4로 판단됩니다."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "tipped_bin_03.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": false,
+   "error": "Ollama 빈 응답 3회 — 모델/서버 점검 필요",
+   "variant": "V0",
+   "file": "tipped_bin_11.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 32.69,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 3, \"confidence\": 85, \"reason\": \"Spilled drink with ice cubes on floor in corridor; cleaning robot can handle liquid and contamination, no broken glass or smoke.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 3,
+    "confidence": 85,
+    "reason": "Spilled drink with ice cubes on floor in corridor; cleaning robot can handle liquid and contamination, no broken glass or smoke."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "tipped_bin_16.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 8.15,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"대상은 주인의 물품으로 보이므로 개입 불가. 카메라로 관찰 및 기록만 수행하며, 박스 상태(개방/배송 중)는 위험 요소 없음.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "대상은 주인의 물품으로 보이므로 개입 불가. 카메라로 관찰 및 기록만 수행하며, 박스 상태(개방/배송 중)는 위험 요소 없음."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "package_box_01.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 31.86,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 85, \"reason\": \"이 장면에는 깨진 유리, 연기 등 위험 요소가 없으며 주인이 있는 물건(박스)을 건드리지 않아도 되는 상황입니다. 콘텐츠의 'CUSTOMER RETURN' 라벨은 임시 저장물로 보이므로, 로봇 팀이 개입할 필요가 없습니다.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 85,
+    "reason": "이 장면에는 깨진 유리, 연기 등 위험 요소가 없으며 주인이 있는 물건(박스)을 건드리지 않아도 되는 상황입니다. 콘텐츠의 'CUSTOMER RETURN' 라벨은 임시 저장물로 보이므로, 로봇 팀이 개입할 필요가 없습니다."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "package_box_06.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 82.81,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"장면에는 AGSM 로고가 벽과 바닥에 정상적으로 배치된 것으로 보이며, 주인의 물건이 아닌 공공 공간의 표지판으로 판단됨. 위험 요소(깨진 유리·연기 등) 없음. 따라서 개입 불필요하며 단순 기록만 수행해야 함.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "장면에는 AGSM 로고가 벽과 바닥에 정상적으로 배치된 것으로 보이며, 주인의 물건이 아닌 공공 공간의 표지판으로 판단됨. 위험 요소(깨진 유리·연기 등) 없음. 따라서 개입 불필요하며 단순 기록만 수행해야 함."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "fallen_object_12.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 25.23,
+   "raw_text": "{\"is_task\": true, \"type\": \"Broken glass hazard requiring immediate reporting\", \"capabilities\": [\"report\"], \"urgency\": 4, \"confidence\": 85, \"reason\": \"Broken glass on the floor presents a trip hazard in a public area. As per principles, we must report without touching. The presence of multiple shards and water droplets indicates recent breakage, making it urgent (level 4). Confidence is high as broken glass in such settings typically requires immediate reporting.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "Broken glass hazard requiring immediate reporting",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 85,
+    "reason": "Broken glass on the floor presents a trip hazard in a public area. As per principles, we must report without touching. The presence of multiple shards and water droplets indicates recent breakage, making it urgent (level 4). Confidence is high as broken glass in such settings typically requires immediate reporting."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_hazard_008.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 15.2,
+   "raw_text": "{\"is_task\": true, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 4, \"confidence\": 95, \"reason\": \"깨진 유리 조각이 바닥에 흩어져 있어 사람의 넘어짐 위험을 초래할 수 있으므로 즉시 보고 대상이며, 물건을 직접 다루거나 청소하는 것은 허용되지 않음\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 95,
+    "reason": "깨진 유리 조각이 바닥에 흩어져 있어 사람의 넘어짐 위험을 초래할 수 있으므로 즉시 보고 대상이며, 물건을 직접 다루거나 청소하는 것은 허용되지 않음"
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_hazard_013.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 90.75,
+   "raw_text": "{\"is_task\":true,\"type\":\"report\",\"capabilities\":[\"report\"],\"urgency\":4,\"confidence\":85,\"reason\":\"깨진 타일 조각은 넘어짐 및 부상 위험을 유발할 수 있으므로 즉시 보고 대상으로 기록해야 합니다. 물건을 만지거나 처리할 수 없으므로 단순히 관찰 및 보고만 수행합니다.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 4,
+    "confidence": 85,
+    "reason": "깨진 타일 조각은 넘어짐 및 부상 위험을 유발할 수 있으므로 즉시 보고 대상으로 기록해야 합니다. 물건을 만지거나 처리할 수 없으므로 단순히 관찰 및 보고만 수행합니다."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_hazard_016.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 80.06,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"장면에 위험 요소(깨진 유리·연기 등), 주인 물건 또는 사람/동물이 없으며, 모든 구조물과 장식이 정상 상태로 관찰됨. 로봇 팀의 개입 대상이 없으므로 단순히 기록만 수행해야 함.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "장면에 위험 요소(깨진 유리·연기 등), 주인 물건 또는 사람/동물이 없으며, 모든 구조물과 장식이 정상 상태로 관찰됨. 로봇 팀의 개입 대상이 없으므로 단순히 기록만 수행해야 함."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "normal_000.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 7.3,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"사진 내에는 사람·동물이 정상적으로 이동하며, 주인 물건(가방 등)이 무단 방치되지 않았고 깨진 유리 또는 연기 같은 위험 요소도 없음. 따라서 개입 불필요\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "사진 내에는 사람·동물이 정상적으로 이동하며, 주인 물건(가방 등)이 무단 방치되지 않았고 깨진 유리 또는 연기 같은 위험 요소도 없음. 따라서 개입 불필요"
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "normal_005.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 51.58,
+   "raw_text": "{\"is_task\":false,\"type\":\"report\",\"capabilities\":[\"report\"],\"urgency\":1,\"confidence\":95,\"reason\":\"정상적인 강의실 환경으로, 주인 소유물 없이 깨진 유리·연기 등 위험 요소가 없으며, 사람·동물도 보이지 않아 개입 필요 없음\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "정상적인 강의실 환경으로, 주인 소유물 없이 깨진 유리·연기 등 위험 요소가 없으며, 사람·동물도 보이지 않아 개입 필요 없음"
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "normal_016.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 61.77,
+   "raw_text": "{\"is_task\": false, \"type\": \"\", \"capabilities\": [], \"urgency\": 1, \"confidence\": 100, \"reason\": \"No hazardous elements (no broken glass/spills), owner's items intact; no intervention needed.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "",
+    "capabilities": [],
+    "urgency": 1,
+    "confidence": 100,
+    "reason": "No hazardous elements (no broken glass/spills), owner's items intact; no intervention needed."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "belongings_000.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 17.59,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 90, \"reason\": \"장면에 위험 요소(깨진 유리·연기 등)나 주인의 물건을 건드리지 않아야 하는 사항이 없으며, 모든 물건은 정상적으로 배치되어 있어 팀 개입 필요성이 없습니다.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 90,
+    "reason": "장면에 위험 요소(깨진 유리·연기 등)나 주인의 물건을 건드리지 않아야 하는 사항이 없으며, 모든 물건은 정상적으로 배치되어 있어 팀 개입 필요성이 없습니다."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "belongings_006.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 84.47,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 98, \"reason\": \"이 장면은 정상적인 강의실로 깨진 유리·연기 등 위험 요소 없으며 주인 물건도 발견되지 않아 개입 필요 없음. 모든 의자와 책상이 정돈되어 있고, 사람/동물 없으므로 단순 관찰 및 기록만 수행해야 함.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 98,
+    "reason": "이 장면은 정상적인 강의실로 깨진 유리·연기 등 위험 요소 없으며 주인 물건도 발견되지 않아 개입 필요 없음. 모든 의자와 책상이 정돈되어 있고, 사람/동물 없으므로 단순 관찰 및 기록만 수행해야 함."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_ambiguous_001.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 57.2,
+   "raw_text": "{\"is_task\": false, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 95, \"reason\": \"우편물은 주인이 있는 물건으로 간주되며, 로봇 팀이 개입할 사유가 없음. 해당 상황에서 위험 요소(깨진 유리 등)도 없으며, 주인의 소유물로 판단되어 개입하지 않아야 함.\"}",
+   "judgment": {
+    "is_task": false,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 95,
+    "reason": "우편물은 주인이 있는 물건으로 간주되며, 로봇 팀이 개입할 사유가 없음. 해당 상황에서 위험 요소(깨진 유리 등)도 없으며, 주인의 소유물로 판단되어 개입하지 않아야 함."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_ambiguous_006.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 103.45,
+   "raw_text": "{\"is_task\": true, \"type\": \"clean\", \"capabilities\": [\"clean\"], \"urgency\": 4, \"confidence\": 90, \"reason\": \"Wet floor sign indicates liquid hazard requiring cleaning; cleaning robot can handle liquid contamination.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "clean",
+    "capabilities": [
+     "clean"
+    ],
+    "urgency": 4,
+    "confidence": 90,
+    "reason": "Wet floor sign indicates liquid hazard requiring cleaning; cleaning robot can handle liquid contamination."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_ambiguous_022.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  },
+  {
+   "call_ok": true,
+   "latency_s": 24.56,
+   "raw_text": "{\"is_task\": true, \"type\": \"report\", \"capabilities\": [\"report\"], \"urgency\": 1, \"confidence\": 85, \"reason\": \"Construction area is securely fenced with no visible hazards (broken glass/steam) or owner-occupied items; survey robot should document site status during routine patrol per protocol.\"}",
+   "judgment": {
+    "is_task": true,
+    "type": "report",
+    "capabilities": [
+     "report"
+    ],
+    "urgency": 1,
+    "confidence": 85,
+    "reason": "Construction area is securely fenced with no visible hazards (broken glass/steam) or owner-occupied items; survey robot should document site status during routine patrol per protocol."
+   },
+   "parse_ok": true,
+   "variant": "V0",
+   "file": "indoor_ambiguous_023.jpg",
+   "temperature": 0.7,
+   "rep": 3
+  }
+ ]
+}
