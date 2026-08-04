@@ -4,3 +4,10 @@ __pycache__/
 *.pyc
 .pytest_cache/
 exp/results/
+
+# API 키·시크릿 절대 커밋 금지 (안전벨트)
+*api_key*
+*secret*
+*.key
+*credential*
+.env
