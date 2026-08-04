@@ -1,0 +1,36 @@
+name: hospital_indoor
+
+# 지도: 병원 위상 그래프 + 점유격자 (sim/maps/hospital/)
+map:
+  dir: sim/maps/hospital
+  graph: patrol_graph.json      # 정리판(115노드, 1조각 연결)
+  occupancy: occ_hospital.npy
+  meta: hospital_meta.json
+
+# 이종 로봇 3대 (능력 기저 구성)
+robots:
+  - {id: 0, role: scout,  speed_mps: 1.0, caps: [],            sense_radius_m: 8.0, reliable_radius_m: 2.5}
+  - {id: 1, role: manip,  speed_mps: 0.6, caps: [manip],       sense_radius_m: 6.0, reliable_radius_m: 2.0}
+  - {id: 2, role: clean,  speed_mps: 0.4, caps: [clean, carry], sense_radius_m: 6.0, reliable_radius_m: 2.0}
+
+patrol:
+  cell_m: 0.05
+
+# 실내 임무 온톨로지 (8종 + 능력 조합 정답)
+#   caps: 필요 능력 조합 (report=보고만 / manip / clean / manip+clean=조합)
+#   n: 필요 로봇 수 (조합은 2)  u: 긴급도  c: 처리시간[s]  share: 발생 비중
+tasks:
+  types:
+    trash:       {caps: [manip],        n: 1, u: 1, c: 60,  share: 0.18}
+    spill:       {caps: [clean],        n: 1, u: 3, c: 90,  share: 0.14}
+    papers:      {caps: [manip],        n: 1, u: 1, c: 45,  share: 0.10}
+    chair:       {caps: [manip],        n: 1, u: 2, c: 60,  share: 0.10}
+    sign:        {caps: [manip],        n: 1, u: 2, c: 60,  share: 0.08}
+    tipped_bin:  {caps: [manip, clean], n: 2, u: 2, c: 150, share: 0.12}   # 조합: 용기+내용물
+    trashbag:    {caps: [manip, clean], n: 2, u: 2, c: 180, share: 0.08}   # 조합: 운반 협력
+    fallen_obj:  {caps: [report],       n: 0, u: 3, c: 0,   share: 0.06}   # 보고: 초중량
+    box_untouch: {caps: [report],       n: 0, u: 2, c: 0,   share: 0.06}   # 보고: 소유권 불명
+    hazard:      {caps: [report],       n: 0, u: 4, c: 0,   share: 0.08}   # 보고: 위험물
+  nontask_ratio: 0.5     # 애매(함정) = 임무 총량의 50%
+  hazard_extra: 0.0      # (hazard가 이미 types에 있음)
+  rho: 0.4               # 부하율 (본 실험 스윕: 0.15/0.25/0.4)
